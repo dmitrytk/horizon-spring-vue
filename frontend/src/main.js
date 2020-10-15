@@ -4,6 +4,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import './scss/custom.scss';
+import './scss/variables.scss';
+import './scss/style.scss';
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);

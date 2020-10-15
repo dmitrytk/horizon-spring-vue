@@ -1,2 +1,13 @@
+@import 'variables';
+
+$theme-colors: (
+        //'primary': $primary-color,
+        //'danger': $danger-color,
+        //'dark': $dark-color,
+);
+
+$border-radius: 0.25rem;
+
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
