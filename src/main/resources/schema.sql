@@ -15,7 +15,7 @@ CREATE TABLE field_coordinates
     y        NUMERIC(20, 2),
     lat      NUMERIC(10, 7),
     lng      NUMERIC(10, 7),
-    field_id integer,
+    field_id INTEGER,
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE wells
     y        NUMERIC(20, 2),
     alt      NUMERIC(6, 2),
     bottom   NUMERIC(7, 2),
-    field_id integer      NOT NULL,
+    field_id INTEGER      NOT NULL,
     UNIQUE (name, field_id),
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );
@@ -42,7 +42,7 @@ CREATE TABLE wells
 CREATE TABLE inclinometry
 (
     id      BIGSERIAL PRIMARY KEY,
-    well_id integer,
+    well_id INTEGER,
     md      NUMERIC(7, 2) NOT NULL CHECK ( md >= 0 ),
     inc     NUMERIC(5, 2),
     azi     NUMERIC(5, 2),
@@ -64,12 +64,12 @@ CREATE TABLE rates
 CREATE TABLE mer
 (
     id         BIGSERIAL PRIMARY KEY,
-    well_id    integer,
+    well_id    INTEGER,
     date       DATE,
     status     VARCHAR(100),
     rate       NUMERIC(10, 2),
     production NUMERIC(20, 2),
-    work_days  integer,
+    work_days  INTEGER,
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
