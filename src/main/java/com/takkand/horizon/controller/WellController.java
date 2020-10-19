@@ -31,27 +31,27 @@ public class WellController {
     @GetMapping("/{id}")
     Well findById(@PathVariable Long id) {
         return wellRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @GetMapping("/{id}/inclinometry")
     List<Inclinometry> findWellInclinometry(@PathVariable Long id) {
         return wellRepository.findById(id)
                 .map(Well::getInclinometry)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @GetMapping("/{id}/mer")
     List<Mer> findWellMer(@PathVariable Long id) {
         return wellRepository.findById(id)
                 .map(Well::getMer)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @GetMapping("/{id}/rates")
     List<Rate> findWellRates(@PathVariable Long id) {
         return wellRepository.findById(id)
                 .map(Well::getRates)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 }

@@ -25,9 +25,15 @@ public class Field {
     @JsonIgnore
     private List<Well> wells = new ArrayList<>();
 
+
     public Field() {
     }
 
+    public void update(Field otherField) {
+        if (otherField.getName() != null) setName(otherField.getName());
+        if (otherField.getType() != null) setType(otherField.getType());
+        if (otherField.getLocation() != null) setLocation(otherField.getLocation());
+    }
 
     @Override
     public boolean equals(Object o) {

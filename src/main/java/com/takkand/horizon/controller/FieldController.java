@@ -42,14 +42,14 @@ public class FieldController {
     @GetMapping("/{id}")
     Field findById(@PathVariable Long id) {
         return fieldRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @GetMapping("/{id}/wells")
     List<Well> findFieldWells(@PathVariable Long id) {
         return fieldRepository.findById(id)
                 .map(Field::getWells)
-                .orElseThrow(() -> new ResourceNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
 

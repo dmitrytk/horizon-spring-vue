@@ -1,4 +1,4 @@
-CREATE TABLE fields
+CREATE TABLE IF NOT EXISTS fields
 (
     id          BIGSERIAL PRIMARY KEY,
     name        VARCHAR(100) UNIQUE NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE fields
 );
 
 
-CREATE TABLE field_coordinates
+CREATE TABLE IF NOT EXISTS field_coordinates
 (
     id       BIGSERIAL PRIMARY KEY,
     x        NUMERIC(20, 2),
@@ -21,7 +21,7 @@ CREATE TABLE field_coordinates
 
 
 
-CREATE TABLE wells
+CREATE TABLE IF NOT EXISTS wells
 (
     id       BIGSERIAL PRIMARY KEY,
     name     VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE wells
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );
 
-CREATE TABLE inclinometry
+CREATE TABLE IF NOT EXISTS inclinometry
 (
     id      BIGSERIAL PRIMARY KEY,
     well_id INTEGER,
@@ -49,7 +49,7 @@ CREATE TABLE inclinometry
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
-CREATE TABLE rates
+CREATE TABLE IF NOT EXISTS rates
 (
     id       BIGSERIAL PRIMARY KEY,
     well_id  INTEGER,
@@ -61,7 +61,7 @@ CREATE TABLE rates
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
-CREATE TABLE mer
+CREATE TABLE IF NOT EXISTS mer
 (
     id         BIGSERIAL PRIMARY KEY,
     well_id    INTEGER,
