@@ -1,20 +1,20 @@
 CREATE TABLE fields
 (
     id          BIGSERIAL PRIMARY KEY,
-    name        varchar(255) UNIQUE NOT NULL,
-    type        text,
-    location    text,
-    description text
+    name        VARCHAR(100) UNIQUE NOT NULL,
+    type        VARCHAR(50),
+    location    VARCHAR(100),
+    description TEXT
 );
 
 
 CREATE TABLE field_coordinates
 (
     id       BIGSERIAL PRIMARY KEY,
-    x        numeric(20, 2),
-    y        numeric(20, 2),
-    lat      numeric(10, 7),
-    lng      numeric(10, 7),
+    x        NUMERIC(20, 2),
+    y        NUMERIC(20, 2),
+    lat      NUMERIC(10, 7),
+    lng      NUMERIC(10, 7),
     field_id integer,
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );
@@ -24,16 +24,16 @@ CREATE TABLE field_coordinates
 CREATE TABLE wells
 (
     id       BIGSERIAL PRIMARY KEY,
-    name     varchar(255) NOT NULL,
-    pad      text,
-    type     text,
-    status   text,
-    lat      numeric(10, 6),
-    lng      numeric(10, 6),
-    x        numeric(20, 2),
-    y        numeric(20, 2),
-    alt      numeric(6, 2),
-    bottom   numeric(7, 2),
+    name     VARCHAR(255) NOT NULL,
+    pad      VARCHAR(100),
+    type     VARCHAR(100),
+    status   VARCHAR(100),
+    lat      NUMERIC(10, 6),
+    lng      NUMERIC(10, 6),
+    x        NUMERIC(20, 2),
+    y        NUMERIC(20, 2),
+    alt      NUMERIC(6, 2),
+    bottom   NUMERIC(7, 2),
     field_id integer      NOT NULL,
     UNIQUE (name, field_id),
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
@@ -43,21 +43,21 @@ CREATE TABLE inclinometry
 (
     id      BIGSERIAL PRIMARY KEY,
     well_id integer,
-    md      numeric(7, 2) NOT NULL CHECK ( md >= 0 ),
-    inc     numeric(5, 2),
-    azi     numeric(5, 2),
+    md      NUMERIC(7, 2) NOT NULL CHECK ( md >= 0 ),
+    inc     NUMERIC(5, 2),
+    azi     NUMERIC(5, 2),
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
 CREATE TABLE rates
 (
     id       BIGSERIAL PRIMARY KEY,
-    well_id  integer,
-    date     date,
-    rate     numeric(10, 2),
-    dynamic  numeric(6, 2),
-    static   numeric(6, 2),
-    pressure numeric(6, 2),
+    well_id  INTEGER,
+    date     DATE,
+    rate     NUMERIC(10, 2),
+    dynamic  NUMERIC(6, 2),
+    static   NUMERIC(6, 2),
+    pressure NUMERIC(6, 2),
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
@@ -65,10 +65,10 @@ CREATE TABLE mer
 (
     id         BIGSERIAL PRIMARY KEY,
     well_id    integer,
-    date       date,
-    status     text,
-    rate       numeric(10, 2),
-    production numeric(20, 2),
+    date       DATE,
+    status     VARCHAR(100),
+    rate       NUMERIC(10, 2),
+    production NUMERIC(20, 2),
     work_days  integer,
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
