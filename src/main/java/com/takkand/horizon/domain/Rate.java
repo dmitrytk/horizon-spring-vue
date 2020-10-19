@@ -14,8 +14,7 @@ import java.util.Objects;
 public class Rate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rates_id_seq")
-    @SequenceGenerator(name = "rates_id_seq", sequenceName = "rates_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate date;

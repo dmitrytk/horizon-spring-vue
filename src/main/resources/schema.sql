@@ -1,7 +1,7 @@
 CREATE TABLE fields
 (
     id          BIGSERIAL PRIMARY KEY,
-    name        text UNIQUE NOT NULL,
+    name        varchar(255) UNIQUE NOT NULL,
     type        text,
     location    text,
     description text
@@ -24,7 +24,7 @@ CREATE TABLE field_coordinates
 CREATE TABLE wells
 (
     id       BIGSERIAL PRIMARY KEY,
-    name     text    NOT NULL,
+    name     varchar(255) NOT NULL,
     pad      text,
     type     text,
     status   text,
@@ -34,7 +34,7 @@ CREATE TABLE wells
     y        numeric(20, 2),
     alt      numeric(6, 2),
     bottom   numeric(7, 2),
-    field_id integer NOT NULL,
+    field_id integer      NOT NULL,
     UNIQUE (name, field_id),
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );

@@ -11,8 +11,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Well {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wells_id_seq")
-    @SequenceGenerator(name = "wells_id_seq", sequenceName = "wells_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String pad;

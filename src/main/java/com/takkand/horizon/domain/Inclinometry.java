@@ -11,8 +11,7 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Inclinometry {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inclinometry_id_seq")
-    @SequenceGenerator(name = "inclinometry_id_seq", sequenceName = "inclinometry_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Double md;

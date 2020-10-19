@@ -8,10 +8,7 @@ import com.takkand.horizon.repository.InclinometryRepository;
 import com.takkand.horizon.repository.MerRepository;
 import com.takkand.horizon.repository.RateRepository;
 import com.takkand.horizon.util.QueryMatcher;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +32,11 @@ public class FieldController {
     @GetMapping
     List<Field> findAll() {
         return fieldRepository.findAll();
+    }
+
+    @PostMapping
+    Field createField(@RequestBody Field newField) {
+        return fieldRepository.save(newField);
     }
 
     @GetMapping("/{id}")

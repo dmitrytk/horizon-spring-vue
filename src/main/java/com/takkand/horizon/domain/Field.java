@@ -13,9 +13,9 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fields_id_seq")
-    @SequenceGenerator(name = "fields_id_seq", sequenceName = "fields_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String name;
     private String type;
