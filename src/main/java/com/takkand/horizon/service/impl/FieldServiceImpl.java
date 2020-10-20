@@ -31,12 +31,22 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Field getOne(Long id) {
+    public void deleteById(Long id) {
+        fieldRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        fieldRepository.deleteAll();
+    }
+
+    @Override
+    public Field findById(Long id) {
         return fieldRepository.getOne(id);
     }
 
     @Override
-    public List<Field> getAll() {
+    public List<Field> findAll() {
         return fieldRepository.findAll();
     }
 }
