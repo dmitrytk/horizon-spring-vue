@@ -26,6 +26,10 @@ public class Field {
     @JsonIgnore
     private List<Well> wells = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "field")
+    @JsonIgnore
+    private List<FieldCoordinates> coordinates = new ArrayList<>();
+
 
     public void update(Field otherField) {
         if (otherField.getName() != null) setName(otherField.getName());

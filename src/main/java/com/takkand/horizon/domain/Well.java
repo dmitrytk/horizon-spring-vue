@@ -43,7 +43,7 @@ public class Well {
     @JsonIgnore
     private Field field;
 
-    void update(Well otherWell) {
+    public void update(Well otherWell) {
         if (otherWell.getName() != null) setName(otherWell.getName());
         if (otherWell.getPad() != null) setPad(otherWell.getPad());
         if (otherWell.getType() != null) setName(otherWell.getName());

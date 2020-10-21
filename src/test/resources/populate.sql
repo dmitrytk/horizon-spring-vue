@@ -1,3 +1,3 @@
-insert into fields(name)
-values ('Carichan'),
+INSERT INTO fields(name)
+VALUES ('Carichan'),
        ('Filat');
