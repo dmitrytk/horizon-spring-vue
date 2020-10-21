@@ -1,8 +1,10 @@
 package com.takkand.horizon.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takkand.horizon.domain.Field;
+import com.takkand.horizon.domain.Mer;
 import com.takkand.horizon.domain.Well;
 import com.takkand.horizon.repository.FieldRepository;
 import com.takkand.horizon.repository.InclinometryRepository;
@@ -146,9 +148,20 @@ public class BatchController {
 
         // Inclinometry data
         List<Object[]> mer = new ArrayList<>();
+        List<Mer> merObjects = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        ObjectMapper objectMapper = new ObjectMapper();
         payload.get("mer").elements().forEachRemaining(node -> {
             if (JsonNodeValidator.validateMerRow(node)) {
+                try {
+
+                    /// !!! Use objectMapper instead of manual mapping !!!
+                    Mer m = objectMapper.treeToValue(node, Mer.class);
+                    merObjects.add(m);
+                    ///
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
                 String wellName = node.get("well").isTextual() ? node.get("well").asText() : null;
                 LocalDate date = node.get("date").isTextual()
                         ? LocalDate.parse(node.get("date").asText(), formatter)
@@ -163,6 +176,7 @@ public class BatchController {
                         ? node.get("work_days").asDouble() : null;
                 wellNames.add(wellName);
                 mer.add(new Object[]{wellName, fieldId, date, status, rate, production, work_days});
+
             }
         });
         try {
@@ -176,7 +190,7 @@ public class BatchController {
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("Well does not exists\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(mer.size() + " mer records loaded", HttpStatus.OK);
+        return new ResponseEntity<>(mer.size() + " mer records loaded\n" + merObjects, HttpStatus.OK);
     }
 
 }
