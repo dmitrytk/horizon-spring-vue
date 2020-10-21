@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface FieldRepository extends JpaRepository<Field, Long> {
 
+    Field findByName(String name);
+
     @Modifying
     @Query(value = "DELETE FROM wells w WHERE w.field_id = :id", nativeQuery = true)
     void deleteWells(Long id);

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,11 +23,11 @@ public class Field {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "field")
     @JsonIgnore
-    private List<Well> wells = new ArrayList<>();
+    private List<Well> wells;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "field")
     @JsonIgnore
-    private List<FieldCoordinates> coordinates = new ArrayList<>();
+    private List<FieldCoordinates> coordinates;
 
 
     public void update(Field otherField) {
