@@ -27,5 +27,12 @@ public interface InclinometryRepository extends JpaRepository<Inclinometry, Long
     @Transactional
     @Query(value = "DELETE FROM inclinometry i WHERE i.well_id = :id", nativeQuery = true)
     void deleteWellInclinometry(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM inclinometry i WHERE i.well_id in " +
+            "(SELECT w.id FROM wells w where w.field_id = :fieldId and w.name in (:wellNames) )"
+            , nativeQuery = true)
+    void deleteInclinometryByWellNames(Long fieldId, List<String> wellNames);
 }
 

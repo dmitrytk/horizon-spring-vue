@@ -20,4 +20,12 @@ public interface MerRepository extends JpaRepository<Mer, Long> {
     @Query(value = "DELETE FROM mer m WHERE m.well_id IN" +
             " (SELECT id FROM wells w WHERE  w.field_id = :id)", nativeQuery = true)
     void deleteFieldMer(Long id);
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM mer m WHERE m.well_id in " +
+            "(SELECT w.id FROM wells w where w.field_id = :fieldId and w.name in (:wellNames) )"
+            , nativeQuery = true)
+    void deleteMerByWellNames(Long fieldId, List<String> wellNames);
 }

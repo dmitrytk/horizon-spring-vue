@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS inclinometry;
 CREATE TABLE inclinometry
 (
     id      BIGSERIAL PRIMARY KEY,
-    well_id INTEGER,
+    well_id BIGINT        NOT NULL,
     md      NUMERIC(7, 2) NOT NULL CHECK ( md >= 0 ),
     inc     NUMERIC(5, 2),
     azi     NUMERIC(5, 2),
@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS rates;
 CREATE TABLE rates
 (
     id       BIGSERIAL PRIMARY KEY,
-    well_id  INTEGER,
+    well_id  BIGINT NOT NULL,
     date     DATE,
     rate     NUMERIC(10, 2),
     dynamic  NUMERIC(6, 2),
@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS mer;
 CREATE TABLE mer
 (
     id         BIGSERIAL PRIMARY KEY,
-    well_id    INTEGER,
+    well_id    BIGINT NOT NULL,
     date       DATE,
     status     VARCHAR(100),
     rate       NUMERIC(10, 2),
