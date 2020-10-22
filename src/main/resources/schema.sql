@@ -41,6 +41,21 @@ CREATE TABLE wells
     FOREIGN KEY (field_id) REFERENCES fields (id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS zones;
+CREATE TABLE zones
+(
+    id      BIGSERIAL PRIMARY KEY,
+    well_id BIGINT NOT NULL,
+    name    VARCHAR(100),
+    top_md  NUMERIC(7, 2),
+    bot_md  NUMERIC(7, 2),
+    top_tvd NUMERIC(7, 2),
+    bot_tvd NUMERIC(7, 2),
+    h       NUMERIC(7, 2),
+    UNIQUE (well_id, name),
+    FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
+);
+
 DROP TABLE IF EXISTS inclinometry;
 CREATE TABLE inclinometry
 (

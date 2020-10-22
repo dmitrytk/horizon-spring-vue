@@ -4,15 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takkand.horizon.domain.Field;
 import com.takkand.horizon.domain.Well;
-import com.takkand.horizon.domain.load.MerLoad;
-import com.takkand.horizon.domain.load.setter.MerBatchSetter;
+import com.takkand.horizon.domain.view.*;
+import com.takkand.horizon.load.Payload;
+import com.takkand.horizon.load.setter.InclinometryBatchSetter;
+import com.takkand.horizon.load.setter.MerBatchSetter;
+import com.takkand.horizon.load.setter.RateBatchSetter;
+import com.takkand.horizon.load.setter.ZoneBatchSetter;
 import com.takkand.horizon.repository.FieldRepository;
 import com.takkand.horizon.repository.InclinometryRepository;
-import com.takkand.horizon.repository.MerRepository;
 import com.takkand.horizon.repository.WellRepository;
 import com.takkand.horizon.sql.Queries;
-import com.takkand.horizon.util.JsonNodeValidator;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.takkand.horizon.util.Loader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -36,14 +37,12 @@ public class BatchController {
     private final WellRepository wellRepository;
     private final FieldRepository fieldRepository;
     private final InclinometryRepository inclinometryRepository;
-    private final MerRepository merRepository;
     private final JdbcTemplate jdbcTemplate;
 
-    public BatchController(WellRepository wellRepository, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, MerRepository merRepository, JdbcTemplate jdbcTemplate) {
+    public BatchController(WellRepository wellRepository, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, JdbcTemplate jdbcTemplate) {
         this.wellRepository = wellRepository;
         this.fieldRepository = fieldRepository;
         this.inclinometryRepository = inclinometryRepository;
-        this.merRepository = merRepository;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -81,56 +80,36 @@ public class BatchController {
 
 
     @PostMapping("/inclinometry")
-    ResponseEntity<String> loadInclinometry(@RequestBody JsonNode payload) {
-        if (!JsonNodeValidator.validateInclinometryJson(payload))
+    ResponseEntity<String> loadInclinometry(@RequestBody Payload<InclinometryView> payload) {
+        if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
         // Get field id
         Long fieldId;
         try {
-            fieldId = fieldRepository.findByName(payload.get("field").asText()).getId();
+            fieldId = fieldRepository.findByName(payload.getField()).getId();
         } catch (NullPointerException e) {
             System.out.println(e.toString());
             return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        // Filter invalid data
+        List<InclinometryView> data = payload.getValidData();
+
         // Well names to delete old inclinometry
-        List<String> wellNames = new ArrayList<>();
+        List<String> wellNames = data.stream()
+                .map(View::getWellName).collect(Collectors.toList());
 
-        // Inclinometry data
-        List<Object[]> inclinometry = new ArrayList<>();
-        payload.get("inclinometry").elements().forEachRemaining(node -> {
-            if (JsonNodeValidator.validateInclinometryRow(node)) {
-                String wellName = node.get("well").isTextual() ? node.get("well").asText() : null;
-                Double md = node.get("md").isNumber() ? node.get("md").asDouble() : null;
-                Double azi = node.get("azi").isNumber() ? node.get("azi").asDouble() : null;
-                Double inc = node.get("inc").isNumber() ? node.get("inc").asDouble() : null;
-                wellNames.add(wellName);
-                System.out.println(Arrays.toString(new Object[]{wellName, fieldId, md, inc, azi}));
-                inclinometry.add(new Object[]{wellName, fieldId, md, inc, azi});
-            }
-        });
-        try {
-            // Delete old inclinometry
-            System.out.println(wellNames);
-            inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
-
-            // Insert new inclinometry
-            jdbcTemplate.batchUpdate("INSERT INTO inclinometry(well_id, md, inc, azi)\n" +
-                    "VALUES\n" +
-                    "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?)", inclinometry);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Well does not exists\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(inclinometry.size() + " inclinometry records loaded", HttpStatus.OK);
+        // Delete old inclinometry
+        inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
+        return Loader.load(jdbcTemplate, Queries.INCLINOMETRY_LOAD_QUERY, new InclinometryBatchSetter(fieldId, data));
     }
 
 
     @PostMapping("/mer")
-    ResponseEntity<String> loadNewMer(@RequestBody MerLoad payload) {
+    ResponseEntity<String> loadMer(@RequestBody Payload<MerView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
-
 
         // Get field id
         Long fieldId;
@@ -140,19 +119,55 @@ public class BatchController {
             return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // Filter invalid mer data
-        List<MerLoad.MerData> mer = payload.getMer().stream()
-                .filter(MerLoad.MerData::isValid).collect(Collectors.toList());
+        // Filter invalid data
+        List<MerView> data = payload.getValidData();
 
+        return Loader.load(jdbcTemplate, Queries.MER_LOAD_QUERY, new MerBatchSetter(fieldId, data));
+
+    }
+
+
+    @PostMapping("/rates")
+    ResponseEntity<String> loadRates(@RequestBody Payload<RateView> payload) {
+        if (!payload.isValid())
+            return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        // Get field id
+        Long fieldId;
         try {
-            // Insert new mer
-            int[] updateCounts = jdbcTemplate.batchUpdate(Queries.merLoadQuery, new MerBatchSetter(fieldId, mer));
-
-            return new ResponseEntity<>(updateCounts.length + " mer records loaded\n", HttpStatus.OK);
-
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            fieldId = fieldRepository.findByName(payload.getField()).getId();
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        // Filter invalid data
+        List<RateView> data = payload.getValidData();
+
+        return Loader.load(jdbcTemplate, Queries.RATE_LOAD_QUERY, new RateBatchSetter(fieldId, data));
+
+
+    }
+
+
+    @PostMapping("/zones")
+    ResponseEntity<String> loadZones(@RequestBody Payload<ZoneView> payload) {
+        if (!payload.isValid())
+            return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        // Get field id
+        Long fieldId;
+        try {
+            fieldId = fieldRepository.findByName(payload.getField()).getId();
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // Filter invalid data
+        List<ZoneView> data = payload.getValidData();
+
+        return Loader.load(jdbcTemplate, Queries.ZONE_LOAD_QUERY, new ZoneBatchSetter(fieldId, data));
+
+
     }
 
 }

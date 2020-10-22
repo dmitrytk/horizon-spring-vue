@@ -38,6 +38,10 @@ public class Well {
     @JsonIgnore
     private List<Rate> rates;
 
+    @OneToMany(mappedBy = "well", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Zone> zones;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id")
     @JsonIgnore

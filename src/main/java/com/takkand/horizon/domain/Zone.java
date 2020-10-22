@@ -1,31 +1,45 @@
 package com.takkand.horizon.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+
 
 @Entity
-@Table(name = "mer", uniqueConstraints = {@UniqueConstraint(columnNames = {"well_id", "date"})})
+@Table(name = "zones", uniqueConstraints = {@UniqueConstraint(columnNames = {"well_id", "name"})})
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class Mer {
+public class Zone {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
-    private Date date;
-    private String status;
-    private Double rate;
-    private Double production;
-    @Column(name = "work_days")
+    @Column(name = "top_md")
+    @JsonSetter("top_md")
+    private Double topMd;
+
+    @Column(name = "bot_md")
+    @JsonSetter("bot_md")
+    private Double botMd;
+
+    @Column(name = "top_tvd")
+    @JsonSetter("top_tvd")
+    private Double topTvd;
+
+    @Column(name = "bot_tvd")
     @JsonSetter("bot_tvd")
-    private Integer workDays;
+    private Double botTvd;
+
+    @Column(name = "h")
+    @JsonSetter("h")
+    private Double h;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "well_id")
     @JsonIgnore

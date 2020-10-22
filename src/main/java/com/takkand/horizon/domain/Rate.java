@@ -1,11 +1,13 @@
 package com.takkand.horizon.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.sql.Date;
 
 
 @Entity
@@ -18,11 +20,14 @@ public class Rate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    private Date date;
     private Double rate;
     @Column(name = "dynamic")
+    @JsonSetter("dynamic")
     private Double dynamicLevel;
     @Column(name = "static")
+    @JsonSetter("static")
     private Double staticLevel;
     private Double pressure;
 

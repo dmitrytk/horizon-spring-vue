@@ -1,6 +1,6 @@
-package com.takkand.horizon.domain.load.setter;
+package com.takkand.horizon.load.setter;
 
-import com.takkand.horizon.domain.load.MerLoad;
+import com.takkand.horizon.domain.view.MerView;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
 import java.sql.PreparedStatement;
@@ -9,9 +9,9 @@ import java.util.List;
 
 public class MerBatchSetter implements BatchPreparedStatementSetter {
     private Long fieldId;
-    private List<MerLoad.MerData> mer;
+    private List<MerView> mer;
 
-    public MerBatchSetter(Long fieldId, List<MerLoad.MerData> mer) {
+    public MerBatchSetter(Long fieldId, List<MerView> mer) {
         this.fieldId = fieldId;
         this.mer = mer;
     }
