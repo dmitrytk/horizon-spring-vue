@@ -74,6 +74,7 @@ CREATE TABLE mer
     rate       NUMERIC(10, 2),
     production NUMERIC(20, 2),
     work_days  INTEGER,
+    UNIQUE (well_id, date),
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 

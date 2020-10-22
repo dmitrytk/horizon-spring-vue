@@ -3,17 +3,13 @@ package com.takkand.horizon.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Entity
-@Table(name = "mer")
+@Table(name = "mer", uniqueConstraints = {@UniqueConstraint(columnNames = {"well_id", "date"})})
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class Mer {
@@ -22,9 +18,7 @@ public class Mer {
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate date;
+    private Date date;
     private String status;
     private Double rate;
     private Double production;

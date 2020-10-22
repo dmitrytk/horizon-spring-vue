@@ -1,15 +1,16 @@
 package com.takkand.horizon.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takkand.horizon.domain.Field;
-import com.takkand.horizon.domain.Mer;
 import com.takkand.horizon.domain.Well;
+import com.takkand.horizon.domain.load.MerLoad;
+import com.takkand.horizon.domain.load.setter.MerBatchSetter;
 import com.takkand.horizon.repository.FieldRepository;
 import com.takkand.horizon.repository.InclinometryRepository;
 import com.takkand.horizon.repository.MerRepository;
 import com.takkand.horizon.repository.WellRepository;
+import com.takkand.horizon.sql.Queries;
 import com.takkand.horizon.util.JsonNodeValidator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -128,69 +127,32 @@ public class BatchController {
 
 
     @PostMapping("/mer")
-    ResponseEntity<String> loadMer(@RequestBody JsonNode payload) {
-        if (!JsonNodeValidator.validateMerJson(payload)) {
-            System.out.println("Error");
+    ResponseEntity<String> loadNewMer(@RequestBody MerLoad payload) {
+        if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
 
         // Get field id
         Long fieldId;
         try {
-            fieldId = fieldRepository.findByName(payload.get("field").asText()).getId();
+            fieldId = fieldRepository.findByName(payload.getField()).getId();
         } catch (NullPointerException e) {
-            System.out.println(e.toString());
             return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // Well names to delete old inclinometry
-        List<String> wellNames = new ArrayList<>();
+        // Filter invalid mer data
+        List<MerLoad.MerData> mer = payload.getMer().stream()
+                .filter(MerLoad.MerData::isValid).collect(Collectors.toList());
 
-        // Inclinometry data
-        List<Object[]> mer = new ArrayList<>();
-        List<Mer> merObjects = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        ObjectMapper objectMapper = new ObjectMapper();
-        payload.get("mer").elements().forEachRemaining(node -> {
-            if (JsonNodeValidator.validateMerRow(node)) {
-                try {
-
-                    /// !!! Use objectMapper instead of manual mapping !!!
-                    Mer m = objectMapper.treeToValue(node, Mer.class);
-                    merObjects.add(m);
-                    ///
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-                String wellName = node.get("well").isTextual() ? node.get("well").asText() : null;
-                LocalDate date = node.get("date").isTextual()
-                        ? LocalDate.parse(node.get("date").asText(), formatter)
-                        : null;
-                String status = node.has("status") && node.get("status").isTextual()
-                        ? node.get("status").asText() : null;
-                Double rate = node.has("rate") && node.get("rate").isNumber()
-                        ? node.get("rate").asDouble() : null;
-                Double production = node.has("production") && node.get("production").isNumber()
-                        ? node.get("production").asDouble() : null;
-                Double work_days = node.has("work_days") && node.get("work_days").isNumber()
-                        ? node.get("work_days").asDouble() : null;
-                wellNames.add(wellName);
-                mer.add(new Object[]{wellName, fieldId, date, status, rate, production, work_days});
-
-            }
-        });
         try {
-            // Delete old inclinometry
-            merRepository.deleteMerByWellNames(fieldId, wellNames);
+            // Insert new mer
+            int[] updateCounts = jdbcTemplate.batchUpdate(Queries.merLoadQuery, new MerBatchSetter(fieldId, mer));
 
-            // Insert new inclinometry
-            jdbcTemplate.batchUpdate("INSERT INTO mer(well_id, date, status, rate," +
-                    "production, work_days) VALUES\n" +
-                    "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?,?,?)", mer);
+            return new ResponseEntity<>(updateCounts.length + " mer records loaded\n", HttpStatus.OK);
+
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Well does not exists\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(mer.size() + " mer records loaded\n" + merObjects, HttpStatus.OK);
     }
 
 }
