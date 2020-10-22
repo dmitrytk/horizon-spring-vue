@@ -78,7 +78,6 @@ public class BatchController {
         }
     }
 
-
     @PostMapping("/inclinometry")
     ResponseEntity<String> loadInclinometry(@RequestBody Payload<InclinometryView> payload) {
         if (!payload.isValid())
@@ -105,7 +104,6 @@ public class BatchController {
         return Loader.load(jdbcTemplate, Queries.INCLINOMETRY_LOAD_QUERY, new InclinometryBatchSetter(fieldId, data));
     }
 
-
     @PostMapping("/mer")
     ResponseEntity<String> loadMer(@RequestBody Payload<MerView> payload) {
         if (!payload.isValid())
@@ -125,7 +123,6 @@ public class BatchController {
         return Loader.load(jdbcTemplate, Queries.MER_LOAD_QUERY, new MerBatchSetter(fieldId, data));
 
     }
-
 
     @PostMapping("/rates")
     ResponseEntity<String> loadRates(@RequestBody Payload<RateView> payload) {
@@ -147,7 +144,6 @@ public class BatchController {
 
 
     }
-
 
     @PostMapping("/zones")
     ResponseEntity<String> loadZones(@RequestBody Payload<ZoneView> payload) {

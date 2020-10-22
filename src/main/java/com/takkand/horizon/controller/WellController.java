@@ -1,9 +1,6 @@
 package com.takkand.horizon.controller;
 
-import com.takkand.horizon.domain.Inclinometry;
-import com.takkand.horizon.domain.Mer;
-import com.takkand.horizon.domain.Rate;
-import com.takkand.horizon.domain.Well;
+import com.takkand.horizon.domain.*;
 import com.takkand.horizon.exception.ResourceNotFoundException;
 import com.takkand.horizon.repository.WellRepository;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +17,8 @@ public class WellController {
         this.wellRepository = wellRepository;
     }
 
+
+    // BASIC
     @GetMapping
     List<Well> all() {
         return wellRepository.findAll();
@@ -55,6 +54,7 @@ public class WellController {
     }
 
 
+    // GET CHILD OBJECTS
     @GetMapping("/{id}/inclinometry")
     List<Inclinometry> getInclinometry(@PathVariable Long id) {
         return wellRepository.findById(id)
@@ -76,6 +76,14 @@ public class WellController {
                 .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
+    @GetMapping("/{id}/zones")
+    List<Zone> getZones(@PathVariable Long id) {
+        return wellRepository.findById(id)
+                .map(Well::getZones)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    // DELETE CHILD OBJECTS
     @DeleteMapping("/{id}/inclinometry")
     void deleteInclinometry(@PathVariable Long id) {
         wellRepository.findById(id)
@@ -101,6 +109,16 @@ public class WellController {
         wellRepository.findById(id)
                 .map(well -> {
                     well.getRates().clear();
+                    return wellRepository.save(well);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    @DeleteMapping("/{id}/zones")
+    void deleteZones(@PathVariable Long id) {
+        wellRepository.findById(id)
+                .map(well -> {
+                    well.getZones().clear();
                     return wellRepository.save(well);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(id));

@@ -30,6 +30,7 @@ public class FieldController {
     }
 
 
+    // BASIC
     @GetMapping
     List<Field> all() {
         return fieldRepository.findAll();
@@ -65,6 +66,7 @@ public class FieldController {
         fieldRepository.deleteById(id);
     }
 
+    // GET CHILD OBJECTS
     @GetMapping("/{id}/wells")
     List<Well> getWells(@PathVariable Long id) {
         return fieldRepository.findById(id)
@@ -97,7 +99,8 @@ public class FieldController {
         return QueryMatcher.ratesMatcher(resultSet);
     }
 
-    // Delete orphan objects
+
+    // DELETE CHILD OBJECTS
     @DeleteMapping("/{id}/coordinates")
     void deleteCoordinatess(@PathVariable Long id) {
         fieldCoordinatesRepository.deleteFieldCoordinates(id);
