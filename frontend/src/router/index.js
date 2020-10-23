@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import SQLGenerator from '../views/SQLGenerator.vue';
 import Fields from "../views/Fields";
 import Field from "@/views/Field";
+import Well from "@/views/Well";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/fields/:id',
     name: 'field',
     component: Field,
+  },
+  {
+    path: '/wells/:id',
+    name: 'well',
+    component: Well,
   },
 ];
 

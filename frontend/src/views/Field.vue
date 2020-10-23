@@ -1,6 +1,6 @@
 <template>
   <div v-if="fieldLoaded" class="container">
-    <h1 v-once class="text-center my-3">{{ field.name }} Field</h1>
+    <h1 v-once class="text-center my-3">{{ field.name }} месторождение</h1>
     <div>
       <b-card no-body>
         <b-tabs card>
@@ -18,9 +18,22 @@
               <b-button variant="primary" @click="saveField">Сохранить</b-button>
             </b-card-text>
           </b-tab>
+
+
           <b-tab title="Скважины" @click="wellsLoad">
-            <b-card-text>Скважины</b-card-text>
+            <div>
+              <b-table v-if="wellsLoaded" :items="wells" dark responsive striped @click="fetchWells">
+
+                <template #cell(name)="data">
+                  <!-- `data.value` is the value after formatted by the Formatter -->
+                  <a :href="link(data.value)" class="text-info">{{ data.value }}</a>
+                </template>
+
+              </b-table>
+            </div>
           </b-tab>
+
+
           <b-tab title="Карта">
             <b-card-text>Карта</b-card-text>
           </b-tab>
@@ -41,7 +54,13 @@ export default {
       wellsLoaded: false,
       mapLoaded: false,
       field: {},
-      wells: []
+      wells: [],
+      items: [
+        {age: 40, first_name: 'Dickerson', last_name: 'Macdonald'},
+        {age: 21, first_name: 'Larsen', last_name: 'Shaw'},
+        {age: 89, first_name: 'Geneva', last_name: 'Wilson'},
+        {age: 38, first_name: 'Jami', last_name: 'Carney'}
+      ]
     };
   },
   created() {
@@ -51,6 +70,7 @@ export default {
   methods: {
     wellsLoad() {
       if (!this.wellsLoaded) console.log("Loading wells");
+      this.fetchWells();
       this.wellsLoaded = true;
     },
     mapLoad() {
@@ -58,22 +78,34 @@ export default {
       this.wellsLoaded = true;
     },
     fetchField() {
-      AXIOS.get("/fields/" + this.$route.params.id)
+      AXIOS.get(`/fields/${this.$route.params.id}`)
         .then(res => {
-          console.log(res)
           this.field = res.data;
           this.fieldLoaded = true;
         })
     },
     fetchWells() {
+      if (!this.wellsLoaded) {
+        AXIOS.get(`/fields/${this.$route.params.id}/wells`)
+          .then(res => {
+            this.wells = res.data;
+            this.wellsLoaded = true;
+          })
+      }
+
     },
     saveField() {
       AXIOS.post(`/fields/${this.$route.params.id}`, this.field)
         .then(res => {
           console.log("Field saved");
         })
-    }
-  }
+    },
+    link(data) {
+      const wellId = this.wells.find(el => el.name === data).id;
+      return `/wells/${wellId}`;
+    },
+  },
+  computed: {}
 
 }
 </script>
