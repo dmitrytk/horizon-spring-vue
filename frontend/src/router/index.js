@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import SQLGenerator from '../views/SQLGenerator.vue';
+import Fields from "../views/Fields";
+import Field from "@/views/Field";
 
 Vue.use(VueRouter);
 
@@ -23,6 +25,16 @@ const routes = [
     path: '/csv_to_sql',
     name: 'sqlGenerator',
     component: SQLGenerator,
+  },
+  {
+    path: '/fields',
+    name: 'fields',
+    component: Fields,
+  },
+  {
+    path: '/fields/:id',
+    name: 'field',
+    component: Field,
   },
 ];
 
