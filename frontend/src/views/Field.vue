@@ -15,7 +15,7 @@
               <b-form-group label="Расположение" label-cols="4" label-cols-lg="2" label-for="input-default">
                 <b-form-input id="input-location" v-model="field.location" :placeholder="field.location"></b-form-input>
               </b-form-group>
-              <b-button variant="primary" @click="saveField">Сохранить</b-button>
+              <b-button variant="primary" @click="updateField">Сохранить</b-button>
             </b-card-text>
           </b-tab>
 
@@ -92,12 +92,14 @@ export default {
             this.wellsLoaded = true;
           })
       }
-
     },
-    saveField() {
-      AXIOS.post(`/fields/${this.$route.params.id}`, this.field)
+    updateField() {
+      AXIOS.put(`/fields/${this.$route.params.id}`, this.field)
         .then(res => {
-          console.log("Field saved");
+          this.$toasted.show('Данные сохранены', {
+            position: "top-center",
+            duration: 1000
+          });
         })
     },
     link(data) {
