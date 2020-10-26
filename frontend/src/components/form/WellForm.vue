@@ -9,22 +9,19 @@
     <b-form-group label="Расположение" label-cols="4" label-cols-lg="2" label-for="input-default">
       <b-form-input id="input-location" v-model="field.location" :placeholder="field.location"></b-form-input>
     </b-form-group>
-    <b-button variant="primary" @click="sendField">Сохранить</b-button>
+    <b-button variant="primary" @click="sendWell">Сохранить</b-button>
   </b-card-text>
 </template>
 
 <script>
 export default {
-  name: "FieldForm",
+  name: "WellForm",
   props: {
     field: Object
   },
-  data() {
-    return {};
-  },
   methods: {
-    sendField() {
-      this.$emit("sendField", this.field);
+    sendWell() {
+      this.$emit("sendWell", this.field);
     }
   }
 }

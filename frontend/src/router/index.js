@@ -5,27 +5,31 @@ import SQLGenerator from '../views/SQLGenerator.vue';
 import Fields from "../views/Fields";
 import Field from "@/views/Field";
 import Well from "@/views/Well";
+import Import from "@/views/Import";
+import CoordinateConverter from "@/views/CoordinateConverter";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/import',
+    name: 'import',
+    component: Import,
   },
   {
     path: '/csv_to_sql',
     name: 'sqlGenerator',
     component: SQLGenerator,
+  },
+  {
+    path: '/converter',
+    name: 'converter',
+    component: CoordinateConverter,
   },
   {
     path: '/fields',

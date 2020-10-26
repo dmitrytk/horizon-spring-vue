@@ -5,12 +5,13 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item to="/fields">Месторождения</b-nav-item>
+        <b-nav-item to="/import">Импорт</b-nav-item>
         <b-nav-item-dropdown>
           <template v-slot:button-content>
             Инструменты
           </template>
           <b-dropdown-item to="/csv_to_sql">SQL generator</b-dropdown-item>
-          <b-dropdown-item to="/coordinate_converter">Coordinate converter</b-dropdown-item>
+          <b-dropdown-item to="/converter">Coordinate converter</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
 

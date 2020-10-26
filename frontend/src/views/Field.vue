@@ -1,15 +1,21 @@
 <template>
   <div v-if="fieldLoaded" class="container">
-    <h1 v-once class="text-center my-3">{{ field.name }} месторождение</h1>
+    <h2 v-once class="text-center my-3">{{ field.name }} месторождение</h2>
+    <b-breadcrumb :items="bread"></b-breadcrumb>
     <div>
       <b-card no-body>
         <b-tabs card>
+
+          <!--Form-->
           <b-tab active title="Данные">
-            <FieldForm v-bind:field="field" @passField="saveField"/>
+            <FieldForm v-bind:field="field" @sendField="saveField"/>
           </b-tab>
+
+
+          <!--Wells-->
           <b-tab title="Скважины" @click="fetchWells">
             <div>
-              <b-table v-if="wellsLoaded" :fields="fields" :items="wells" class="text-dark" responsive="xl" striped
+              <b-table v-if="wellsLoaded" :fields="fields" :items="wells" class="text-dark" responsive striped
                        @click="fetchWells">
 
                 <template #cell(name)="data">
@@ -19,12 +25,19 @@
 
               </b-table>
             </div>
+            <b-button class="mr-3" to="/import" variant="primary">Загрузить</b-button>
+            <b-button v-b-modal.modal-1 variant="danger">Удалить</b-button>
+
+            <b-modal id="modal-1" title="Delete wells" @click="log">
+              <p class="my-4">Удалить скважины</p>
+            </b-modal>
           </b-tab>
 
-
+          <!--Map-->
           <b-tab title="Карта">
             <b-card-text>Карта</b-card-text>
           </b-tab>
+
         </b-tabs>
       </b-card>
     </div>
@@ -52,6 +65,10 @@ export default {
         {age: 21, first_name: 'Larsen', last_name: 'Shaw'},
         {age: 89, first_name: 'Geneva', last_name: 'Wilson'},
         {age: 38, first_name: 'Jami', last_name: 'Carney'}
+      ],
+      bread: [
+        {text: 'Месторождения', to: {name: 'fields'}},
+        {text: '', active: true,},
       ]
     };
   },
@@ -64,6 +81,7 @@ export default {
       AXIOS.get(`/fields/${this.$route.params.id}`)
         .then(res => {
           this.field = res.data;
+          this.bread[1].text = res.data.name;
           this.fieldLoaded = true;
         })
     },
@@ -72,6 +90,7 @@ export default {
         AXIOS.get(`/fields/${this.$route.params.id}/wells`)
           .then(res => {
             this.wells = res.data;
+
             this.wellsLoaded = true;
           })
       }
