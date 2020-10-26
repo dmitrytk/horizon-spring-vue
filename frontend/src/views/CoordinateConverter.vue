@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name: "CoordinateConverter"
-}
+  name: 'CoordinateConverter',
+};
 </script>
 
 <style scoped>

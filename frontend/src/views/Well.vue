@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import {AXIOS} from "@/config/http-commons";
+import AXIOS from '@/http-commons';
 
 export default {
-  name: "Well",
+  name: 'Well',
   data() {
     return {
       wellLoaded: false,
@@ -32,14 +32,14 @@ export default {
   methods: {
     fetchWell() {
       AXIOS.get(`/wells/${this.$route.params.id}`)
-        .then(res => {
+        .then((res) => {
           this.well = res.data;
           this.wellLoaded = true;
-        })
+        });
     },
 
   },
-}
+};
 </script>
 
 <style scoped>

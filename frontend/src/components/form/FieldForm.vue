@@ -7,27 +7,30 @@
       <b-form-input id="input-type" v-model="field.type" :placeholder="field.type"></b-form-input>
     </b-form-group>
     <b-form-group label="Расположение" label-cols="4" label-cols-lg="2" label-for="input-default">
-      <b-form-input id="input-location" v-model="field.location" :placeholder="field.location"></b-form-input>
+      <b-form-input id="input-location" v-model="field.location" :placeholder="field.location">
+
+      </b-form-input>
     </b-form-group>
     <b-button variant="primary" @click="sendField">Сохранить</b-button>
   </b-card-text>
 </template>
 
 <script>
+
 export default {
-  name: "FieldForm",
+  name: 'FieldForm',
   props: {
-    field: Object
+    field: Object,
   },
   data() {
     return {};
   },
   methods: {
     sendField() {
-      this.$emit("sendField", this.field);
-    }
-  }
-}
+      this.$emit('sendField', this.field);
+    },
+  },
+};
 </script>
 
 <style scoped>

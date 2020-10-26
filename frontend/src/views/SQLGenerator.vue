@@ -20,20 +20,20 @@
       </b-row>
       <b-form class="mb-3" inline>
         <label class="mr-2">Таблица:</label>
-        <b-form-input class="mr-2"
-          v-model="table"
-          type="text"
+        <b-form-input v-model="table"
+                      class="mr-2"
+                      type="text"
         ></b-form-input>
-        <b-form-checkbox class="mr-2"
-          v-model="drop">
+        <b-form-checkbox v-model="drop"
+                         class="mr-2">
           Drop
         </b-form-checkbox>
-        <b-form-checkbox class="mr-2"
-                         v-model="create">
+        <b-form-checkbox v-model="create"
+                         class="mr-2">
           Create
         </b-form-checkbox>
-        <b-form-checkbox class="mr-2"
-                         v-model="id">
+        <b-form-checkbox v-model="id"
+                         class="mr-2">
           Add id
         </b-form-checkbox>
       </b-form>
@@ -49,8 +49,8 @@
 
 <script>
 
+import { csv } from '@/data/mock';
 import generateSQL from '../util/sql';
-import { csv } from '../data/mock';
 
 export default {
   data() {
