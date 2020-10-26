@@ -9,3 +9,4 @@ export const AXIOS = axios.create({
   "Access-Control-Allow-Origin": "*",
   timeout: 1000
 });
+

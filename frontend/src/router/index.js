@@ -7,6 +7,7 @@ import Field from "@/views/Field";
 import Well from "@/views/Well";
 import Import from "@/views/Import";
 import CoordinateConverter from "@/views/CoordinateConverter";
+import FieldCreate from "../views/FieldCreate";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/fields',
     name: 'fields',
     component: Fields,
+  },
+  {
+    path: '/fields/new',
+    name: 'new_field',
+    component: FieldCreate,
   },
   {
     path: '/fields/:id',
