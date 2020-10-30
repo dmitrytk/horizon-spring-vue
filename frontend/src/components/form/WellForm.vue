@@ -1,13 +1,44 @@
 <template>
   <b-card-text>
-    <b-form-group label="Название" label-cols="4" label-cols-lg="2" label-for="input-default">
-      <b-form-input id="input-name" v-model="field.name" :placeholder="field.name"></b-form-input>
+    <!--String-->
+    <b-form-group label="Номер" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.name" :placeholder="well.name"></b-form-input>
+    </b-form-group>
+    <b-form-group label="Куст" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.pad" :placeholder="well.pad"></b-form-input>
     </b-form-group>
     <b-form-group label="Тип" label-cols="4" label-cols-lg="2" label-for="input-default">
-      <b-form-input id="input-type" v-model="field.type" :placeholder="field.type"></b-form-input>
+      <b-form-input v-model="well.type" :placeholder="well.type">
+      </b-form-input>
     </b-form-group>
-    <b-form-group label="Расположение" label-cols="4" label-cols-lg="2" label-for="input-default">
-      <b-form-input id="input-location" v-model="field.location" :placeholder="field.location"></b-form-input>
+    <b-form-group label="Состояние" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.status" :placeholder="well.status">
+      </b-form-input>
+    </b-form-group>
+    <!--Numeric-->
+    <b-form-group label="Широта" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.lat" :placeholder="well.lat" type="number">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group label="Долгота" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.lng" :placeholder="well.lng" type="number">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group label="X" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.x" :placeholder="well.x" type="number">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group label="Y" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.y" :placeholder="well.y" type="number">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group label="Альтитуда" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.alt" :placeholder="well.alt" type="number">
+      </b-form-input>
+    </b-form-group>
+    <b-form-group label="Забой" label-cols="4" label-cols-lg="2" label-for="input-default">
+      <b-form-input v-model="well.bottom" :placeholder="well.bottom" type="number">
+      </b-form-input>
     </b-form-group>
     <b-button variant="primary" @click="sendWell">Сохранить</b-button>
   </b-card-text>
@@ -15,16 +46,16 @@
 
 <script>
 export default {
-  name: "WellForm",
+  name: 'WellForm',
   props: {
-    field: Object
+    well: Object,
   },
   methods: {
     sendWell() {
-      this.$emit("sendWell", this.field);
-    }
-  }
-}
+      this.$emit('sendWell', this.well);
+    },
+  },
+};
 </script>
 
 <style scoped>

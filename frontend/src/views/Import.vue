@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import AXIOS from '@/http-commons';
+import api from '@/services/FieldService';
 import getTableData from '@/util/table';
 
 export default {
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     fetchFields() {
-      AXIOS.get('/fields')
+      api.getAll()
         .then((res) => {
           this.fields = res.data.map((field) => field.name);
           this.loaded = true;
@@ -78,8 +78,6 @@ export default {
     parse() {
       this.data = getTableData(this.content);
       this.isVisible = false;
-    },
-    load() {
     },
     clear() {
       this.content = '';

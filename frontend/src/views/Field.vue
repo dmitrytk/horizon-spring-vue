@@ -8,24 +8,22 @@
 
           <!--Form-->
           <b-tab active title="Данные">
-            <FieldForm v-bind:field="field" @sendField="saveField"/>
+            <FieldForm v-bind:field="field" @sendField="update"/>
           </b-tab>
 
           <!--Wells-->
-          <b-tab title="Скважины" @click="fetchWells">
+          <b-tab title="Скважины" @click="getWells">
             <div>
               <b-table v-if="wells.length>0" ref="table" :fields="fields" :items="wells"
                        head-variant="dark"
                        responsive
-                       @click="fetchWells">
-
+                       @click="getWells">
                 <template #cell(name)="data">
                   <!-- `data.value` is the value after formatted by the Formatter -->
                   <a :href="link(data.value)" class="font-weight-bold text-dark">{{
                       data.value
                     }}</a>
                 </template>
-
               </b-table>
             </div>
             <b-button class="mr-3" to="/import" variant="primary">Загрузить</b-button>
@@ -44,7 +42,7 @@
 </template>
 
 <script>
-import AXIOS from '@/http-commons';
+import FieldService from '@/services/FieldService';
 import FieldForm from '@/components/form/FieldForm.vue';
 import tables from '@/data/databaseTables';
 
@@ -72,12 +70,12 @@ export default {
     };
   },
   created() {
-    this.fetchField();
+    this.getField();
   },
 
   methods: {
-    fetchField() {
-      AXIOS.get(`/fields/${this.$route.params.id}`)
+    getField() {
+      FieldService.getById(this.$route.params.id)
         .then((res) => {
           this.field = res.data;
           this.$store.commit('setField', res.data.name);
@@ -85,17 +83,17 @@ export default {
           this.fieldLoaded = true;
         });
     },
-    fetchWells() {
+    getWells() {
       if (!this.wellsLoaded) {
-        AXIOS.get(`/fields/${this.$route.params.id}/wells`)
+        FieldService.getWells(this.$route.params.id)
           .then((res) => {
             this.wells = res.data;
             this.wellsLoaded = true;
           });
       }
     },
-    saveField(data) {
-      AXIOS.put(`/fields/${this.$route.params.id}`, data)
+    update(data) {
+      FieldService.update(this.$route.params.id, data)
         .then(() => {
           this.$toasted.show('Данные сохранены', {
             position: 'top-center',
@@ -107,7 +105,7 @@ export default {
       this.$bvModal.msgBoxConfirm('Удалить скважины ?')
         .then((value) => {
           if (value) {
-            AXIOS.delete(`/fields/${this.$route.params.id}/wells`)
+            FieldService.deleteWells(this.$route.params.id)
               .then(() => {
                 this.wells = [];
                 this.$refs.table.refresh();

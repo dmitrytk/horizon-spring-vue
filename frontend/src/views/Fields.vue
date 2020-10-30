@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import AXIOS from '@/http-commons';
+import FieldService from '@/services/FieldService';
 
 export default {
   name: 'Fields',
@@ -31,14 +31,13 @@ export default {
     };
   },
   created() {
-    this.fetchFields();
+    this.getFields();
   },
 
   methods: {
-    fetchFields() {
-      AXIOS.get('/fields')
+    getFields() {
+      FieldService.getAll()
         .then((res) => {
-          console.log(res.data);
           this.fields = res.data;
           this.loaded = true;
         });

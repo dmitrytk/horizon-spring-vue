@@ -2,14 +2,14 @@
   <div class="container">
     <h2 class="my-3 text-center">Новое месторождение</h2>
     <b-card>
-      <FieldForm v-bind:field="field" @sendField="saveField"/>
+      <FieldForm v-bind:field="field" @sendField="save"/>
     </b-card>
   </div>
 </template>
 
 <script>
+import FieldService from '@/services/FieldService';
 import FieldForm from '../components/form/FieldForm.vue';
-import AXIOS from '../http-commons';
 
 export default {
   name: 'FieldCreate',
@@ -20,8 +20,8 @@ export default {
     };
   },
   methods: {
-    saveField(data) {
-      AXIOS.post('/fields', data)
+    save(data) {
+      FieldService.create(data)
         .then(() => {
           this.$toasted.show('Данные сохранены', {
             position: 'top-center',

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const AXIOS = axios.create({
+const http = axios.create({
   baseURL: '/api',
   headers: {
     'Content-type': 'application/json',
@@ -9,4 +9,4 @@ const AXIOS = axios.create({
   timeout: 1000,
 });
 
-export default AXIOS;
+export default http;
