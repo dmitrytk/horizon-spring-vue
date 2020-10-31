@@ -5,11 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    field: '',
+    fieldId: null,
   },
   mutations: {
-    setField(state, name) {
-      state.field = name;
+    setFieldId(state, id) {
+      state.fieldId = id;
     },
   },
   actions: {},

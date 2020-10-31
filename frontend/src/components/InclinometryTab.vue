@@ -20,7 +20,7 @@ export default {
   name: 'InclinometryTab',
   props: {
     incType: String,
-    id: String,
+    id: Number,
   },
   data() {
     return {

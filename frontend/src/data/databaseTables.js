@@ -81,9 +81,13 @@ const wells = [
 ];
 
 const inclinometry = [
+  // {
+  //   label: 'Id',
+  //   key: 'id',
+  // },
   {
-    label: 'Id',
-    key: 'id',
+    label: 'Скважина',
+    key: 'well',
   },
   {
     label: 'Глубина',

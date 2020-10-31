@@ -33,9 +33,7 @@
           <InclinometryTab v-bind:id="this.$route.params.id" inc-type="fields"/>
 
           <!--Map-->
-          <b-tab title="Карта">
-            <b-card-text>Карта</b-card-text>
-          </b-tab>
+          <MapTab/>
 
         </b-tabs>
       </b-card>
@@ -48,10 +46,11 @@ import FieldService from '@/services/FieldService';
 import FieldForm from '@/components/form/FieldForm.vue';
 import tables from '@/data/databaseTables';
 import InclinometryTab from '@/components/InclinometryTab.vue';
+import MapTab from '@/components/MapTab.vue';
 
 export default {
   name: 'Field',
-  components: { InclinometryTab, FieldForm },
+  components: { MapTab, InclinometryTab, FieldForm },
   data() {
     return {
       fields: tables.wells,
@@ -81,7 +80,7 @@ export default {
       FieldService.getById(this.$route.params.id)
         .then((res) => {
           this.field = res.data;
-          this.$store.commit('setField', res.data.name);
+          this.$store.commit('setFieldId', res.data.id);
           this.bread[1].text = res.data.name;
           this.fieldLoaded = true;
         });

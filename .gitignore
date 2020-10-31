@@ -18,3 +18,8 @@ target/
 ### JS ###
 node_modules/
 
+
+### ENV ###
+frontend/.env
+
+

@@ -1,6 +1,7 @@
 <template>
   <div v-if="loaded" class="container">
-    <h2 v-once class="text-center my-3">Скважина {{ well.name }}</h2>
+    <h2 v-once class="text-center my-3">Скважина {{ well.name }},
+      {{ field.name }} месторождение </h2>
     <b-breadcrumb>
       <b-breadcrumb-item to="/fields">Месторождение</b-breadcrumb-item>
       <b-breadcrumb-item to="/fields/1">{{ field.name }}</b-breadcrumb-item>

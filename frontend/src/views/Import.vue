@@ -5,7 +5,7 @@
       <b-form inline>
         <label class="mr-sm-2">Месторождение</label>
         <b-form-select
-          v-model="selectedField"
+          v-model="fieldId"
           :options="fields"
           class="mb-2 mr-sm-2 mb-sm-0"
         ></b-form-select>
@@ -24,13 +24,14 @@
         max-rows="10"
         placeholder="Введите данные"
         rows="10"
+        @keyup="parse"
       ></b-form-textarea>
       <b-table v-if="!isVisible" ref="table" :items="data"
                class="text-dark mt-3"
                head-variant="dark" responsive sticky-header striped>
       </b-table>
 
-      <b-button class="mt-3 mr-3" variant="info" @click="parse">Parse</b-button>
+      <b-button class="mt-3 mr-3" variant="info">Parse</b-button>
       <b-button class="mt-3 mr-3" variant="primary" @click="load">Load</b-button>
       <b-button class="mt-3 mr-3" variant="danger" @click="clear">Clear</b-button>
     </b-card>
@@ -54,7 +55,7 @@ export default {
         { value: 'zones', text: 'Пласты' },
         { value: 'inclinometry', text: 'Инклинометрия' },
       ],
-      selectedField: this.$store.state.field,
+      fieldId: this.$store.state.fieldId,
       selectedDataType: 'wells',
       content: '',
       data: [
@@ -71,7 +72,7 @@ export default {
     fetchFields() {
       api.getAll()
         .then((res) => {
-          this.fields = res.data.map((field) => field.name);
+          this.fields = res.data.map((field) => ({ value: field.id, text: field.name }));
           this.loaded = true;
         });
     },
@@ -80,6 +81,12 @@ export default {
       this.isVisible = false;
     },
     load() {
+      const data = {
+        fieldId: this.fieldId,
+        type: this.selectedDataType,
+        data: this.data,
+      };
+      console.log(data);
     },
     clear() {
       this.content = '';
@@ -87,7 +94,6 @@ export default {
       this.isVisible = true;
     },
     setField() {
-      this.$store.commit('setField', 'New field');
     },
   },
 };
