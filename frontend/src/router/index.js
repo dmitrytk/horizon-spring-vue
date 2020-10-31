@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Field from '@/views/Field.vue';
+import Well from '@/views/Well.vue';
+import Import from '@/views/Import.vue';
+import CoordinateConverter from '@/views/CoordinateConverter.vue';
+import Sandbox from '@/views/Sandbox.vue';
+import Fields from '../views/Fields.vue';
 import SQLGenerator from '../views/SQLGenerator.vue';
-import Fields from "../views/Fields";
-import Field from "@/views/Field";
-import Well from "@/views/Well";
-import Import from "@/views/Import";
-import CoordinateConverter from "@/views/CoordinateConverter";
-import FieldCreate from "../views/FieldCreate";
+import Home from '../views/Home.vue';
+import FieldCreate from '../views/FieldCreate.vue';
 
 Vue.use(VueRouter);
 
@@ -48,9 +49,14 @@ const routes = [
     component: Field,
   },
   {
-    path: '/wells/:id',
+    path: '/fields/:fieldId/wells/:wellId',
     name: 'well',
     component: Well,
+  },
+  {
+    path: '/sandbox',
+    name: 'sandbox',
+    component: Sandbox,
   },
 ];
 

@@ -79,6 +79,8 @@ export default {
       this.data = getTableData(this.content);
       this.isVisible = false;
     },
+    load() {
+    },
     clear() {
       this.content = '';
       this.data = [];

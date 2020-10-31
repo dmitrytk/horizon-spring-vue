@@ -7,7 +7,7 @@ const fields = [
     label: 'Месторождение',
     key: 'name',
     required: true,
-    sortable: true
+    sortable: true,
   },
   {
     label: 'Тип',
@@ -29,37 +29,37 @@ const wells = [
     key: 'name',
     databaseColumn: 'well',
     required: true,
-    sortable: true
+    sortable: true,
 
   },
   {
     label: 'Куст',
     key: 'pad',
-    sortable: true
+    sortable: true,
 
   },
   {
     label: 'Тип',
     key: 'type',
-    sortable: true
+    sortable: true,
 
   },
   {
     label: 'Состояние',
     key: 'status',
-    sortable: true
+    sortable: true,
 
   },
   {
     label: 'Забой',
     key: 'bottom',
-    sortable: true
+    sortable: true,
 
   },
   {
     label: 'Альтитуда',
     key: 'alt',
-    sortable: true
+    sortable: true,
 
   },
   {
@@ -101,9 +101,9 @@ const inclinometry = [
 ];
 
 const tables = {
-  fields: fields,
-  wells: wells,
-  inclinometry: inclinometry,
+  fields,
+  wells,
+  inclinometry,
 };
 
 export default tables;

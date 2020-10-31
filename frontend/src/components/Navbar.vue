@@ -6,6 +6,7 @@
       <b-navbar-nav>
         <b-nav-item to="/fields">Месторождения</b-nav-item>
         <b-nav-item to="/import">Импорт</b-nav-item>
+        <b-nav-item to="/sandbox">Sandbox</b-nav-item>
         <b-nav-item-dropdown>
           <template v-slot:button-content>
             Инструменты

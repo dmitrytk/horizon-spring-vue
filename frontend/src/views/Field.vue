@@ -27,8 +27,10 @@
               </b-table>
             </div>
             <b-button class="mr-3" to="/import" variant="primary">Загрузить</b-button>
-            <b-button variant="danger" @click="deleteWells">Удалить</b-button>
+            <b-button v-if="wells.length>0" variant="danger" @click="deleteWells">Удалить</b-button>
           </b-tab>
+
+          <InclinometryTab v-bind:id="this.$route.params.id" inc-type="fields"/>
 
           <!--Map-->
           <b-tab title="Карта">
@@ -45,10 +47,11 @@
 import FieldService from '@/services/FieldService';
 import FieldForm from '@/components/form/FieldForm.vue';
 import tables from '@/data/databaseTables';
+import InclinometryTab from '@/components/InclinometryTab.vue';
 
 export default {
   name: 'Field',
-  components: { FieldForm },
+  components: { InclinometryTab, FieldForm },
   data() {
     return {
       fields: tables.wells,
@@ -129,7 +132,7 @@ export default {
     },
     link(data) {
       const wellId = this.wells.find((el) => el.name === data).id;
-      return `/wells/${wellId}`;
+      return `/fields/${this.$route.params.id}/wells/${wellId}`;
     },
   },
 };
