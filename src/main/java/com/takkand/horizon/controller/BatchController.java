@@ -49,7 +49,7 @@ public class BatchController {
 
     @PostMapping("/wells")
     ResponseEntity<String> loadWells(@RequestBody JsonNode payload) {
-        Field field = fieldRepository.findByName(payload.get("field").asText());
+        Field field = fieldRepository.findById(payload.get("fieldId").asLong()).get();
         Map<String, Well> wellMap = field.getWells().stream()
                 .collect(Collectors.toMap(Well::getName, Function.identity()));
         List<Well> newWells = new ArrayList<>();
@@ -84,13 +84,7 @@ public class BatchController {
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
         // Get field id
-        Long fieldId;
-        try {
-            fieldId = fieldRepository.findByName(payload.getField()).getId();
-        } catch (NullPointerException e) {
-            System.out.println(e.toString());
-            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Long fieldId = payload.getFieldId();
 
         // Filter invalid data
         List<InclinometryView> data = payload.getValidData();
@@ -110,12 +104,7 @@ public class BatchController {
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
         // Get field id
-        Long fieldId;
-        try {
-            fieldId = fieldRepository.findByName(payload.getField()).getId();
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Long fieldId = payload.getFieldId();
 
         // Filter invalid data
         List<MerView> data = payload.getValidData();
@@ -130,12 +119,7 @@ public class BatchController {
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
         // Get field id
-        Long fieldId;
-        try {
-            fieldId = fieldRepository.findByName(payload.getField()).getId();
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Long fieldId = payload.getFieldId();
 
         // Filter invalid data
         List<RateView> data = payload.getValidData();
@@ -151,12 +135,7 @@ public class BatchController {
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
         // Get field id
-        Long fieldId;
-        try {
-            fieldId = fieldRepository.findByName(payload.getField()).getId();
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>("Field not found", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Long fieldId = payload.getFieldId();
 
         // Filter invalid data
         List<ZoneView> data = payload.getValidData();

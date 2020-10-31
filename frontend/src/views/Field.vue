@@ -97,10 +97,7 @@ export default {
     update(data) {
       FieldService.update(this.$route.params.id, data)
         .then(() => {
-          this.$toasted.show('Данные сохранены', {
-            position: 'top-center',
-            duration: 3000,
-          });
+          this.$toasted.show('Данные сохранены');
         });
     },
     deleteWells() {

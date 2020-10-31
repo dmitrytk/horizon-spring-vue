@@ -31,9 +31,8 @@
                head-variant="dark" responsive sticky-header striped>
       </b-table>
 
-      <b-button class="mt-3 mr-3" variant="info">Parse</b-button>
-      <b-button class="mt-3 mr-3" variant="primary" @click="load">Load</b-button>
-      <b-button class="mt-3 mr-3" variant="danger" @click="clear">Clear</b-button>
+      <b-button class="mt-3 mr-3" variant="primary" @click="load">Загрузить</b-button>
+      <b-button class="mt-3 mr-3" variant="danger" @click="clear">Очистить</b-button>
     </b-card>
   </div>
 </template>
@@ -41,6 +40,7 @@
 <script>
 import api from '@/services/FieldService';
 import getTableData from '@/util/table';
+import BatchService from '@/services/BatchService';
 
 export default {
   name: 'Import',
@@ -58,10 +58,7 @@ export default {
       fieldId: this.$store.state.fieldId,
       selectedDataType: 'wells',
       content: '',
-      data: [
-        { well: '12R', alt: 45.6 },
-        { well: '99r', alt: 45.6 },
-      ],
+      data: [],
       isVisible: true,
     };
   },
@@ -86,7 +83,13 @@ export default {
         type: this.selectedDataType,
         data: this.data,
       };
-      console.log(data);
+      BatchService.import(data)
+        .then(() => {
+          this.$toasted.show('Данные сохранены');
+        })
+        .catch(() => {
+          this.$toasted.show('Ошибка! Проверьте данные.');
+        });
     },
     clear() {
       this.content = '';

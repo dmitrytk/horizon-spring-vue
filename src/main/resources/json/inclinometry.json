@@ -1,6 +1,6 @@
 {
-  "field": "Верхнесалымское",
-  "inclinometry": [
+  "fieldId": 1,
+  "data": [
     {
       "well": "99R",
       "md": 63.2,

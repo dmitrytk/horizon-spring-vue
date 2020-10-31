@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Payload<T extends View> {
 
-    private String field;
+    private Long fieldId;
     private List<T> data;
 
 
     public boolean isValid() {
-        return field != null
+        return fieldId != null
                 && data != null
                 && data.size() > 0;
     }
