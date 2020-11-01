@@ -17,7 +17,7 @@
 import { yandexMap, ymapMarker } from 'vue-yandex-maps';
 
 const settings = {
-  apiKey: '9fbffd1a-c9d0-4e5d-b37a-1826016c34f2',
+  apiKey: process.env.VUE_APP_MAP_API_KEY,
   lang: 'ru_RU',
   coordorder: 'latlong',
 };
