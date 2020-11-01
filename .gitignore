@@ -20,6 +20,6 @@ node_modules/
 
 
 ### ENV ###
-frontend/.env
+/frontend/.env
 
 
