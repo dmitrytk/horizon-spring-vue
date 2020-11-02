@@ -1,7 +1,6 @@
-package com.takkand.horizon.load;
+package com.takkand.horizon.domain.view;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.takkand.horizon.domain.view.View;
 import lombok.Data;
 
 import java.util.List;

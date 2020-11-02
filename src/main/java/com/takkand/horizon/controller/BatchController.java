@@ -5,16 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takkand.horizon.domain.Field;
 import com.takkand.horizon.domain.Well;
 import com.takkand.horizon.domain.view.*;
-import com.takkand.horizon.load.Payload;
-import com.takkand.horizon.load.setter.MerBatchSetter;
-import com.takkand.horizon.load.setter.RateBatchSetter;
-import com.takkand.horizon.load.setter.ZoneBatchSetter;
 import com.takkand.horizon.repository.FieldRepository;
 import com.takkand.horizon.repository.InclinometryRepository;
 import com.takkand.horizon.repository.WellRepository;
 import com.takkand.horizon.service.BatchService;
-import com.takkand.horizon.sql.Queries;
-import com.takkand.horizon.util.Loader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -97,9 +91,10 @@ public class BatchController {
         List<String> wellNames = data.stream()
                 .map(View::getWellName).collect(Collectors.toList());
 
-        // Delete old inclinometry
         try {
+            // Delete old inclinometry
             inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
+            // Load inclinometry
             int[] updateCounts = batchService.inclinometryImport(data, fieldId);
             return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
         } catch (Exception e) {
@@ -118,7 +113,13 @@ public class BatchController {
         // Filter invalid data
         List<MerView> data = payload.getValidData();
 
-        return Loader.load(jdbcTemplate, Queries.MER_LOAD_QUERY, new MerBatchSetter(fieldId, data));
+        try {
+            // Load mer
+            int[] updateCounts = batchService.merImport(data, fieldId);
+            return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 
@@ -133,7 +134,13 @@ public class BatchController {
         // Filter invalid data
         List<RateView> data = payload.getValidData();
 
-        return Loader.load(jdbcTemplate, Queries.RATE_LOAD_QUERY, new RateBatchSetter(fieldId, data));
+        try {
+            // Load mer
+            int[] updateCounts = batchService.rateImport(data, fieldId);
+            return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
 
     }
@@ -149,7 +156,13 @@ public class BatchController {
         // Filter invalid data
         List<ZoneView> data = payload.getValidData();
 
-        return Loader.load(jdbcTemplate, Queries.ZONE_LOAD_QUERY, new ZoneBatchSetter(fieldId, data));
+        try {
+            // Load mer
+            int[] updateCounts = batchService.zoneImport(data, fieldId);
+            return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
 
     }
