@@ -77,7 +77,7 @@ public class BatchController {
 
     @PostMapping("/inclinometry")
     @Transactional
-    ResponseEntity<String> loadInclinometry(@RequestBody Payload<InclinometryView> payload) {
+    ResponseEntity<String> loadInclinometry(@RequestBody Payload<IncView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -85,7 +85,7 @@ public class BatchController {
         Long fieldId = payload.getFieldId();
 
         // Filter invalid data
-        List<InclinometryView> data = payload.getValidData();
+        List<IncView> data = payload.getValidData();
 
         // Well names to delete old inclinometry
         List<String> wellNames = data.stream()

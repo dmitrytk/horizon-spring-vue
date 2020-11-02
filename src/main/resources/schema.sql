@@ -93,4 +93,14 @@ CREATE TABLE mer
     FOREIGN KEY (well_id) REFERENCES wells (id) ON DELETE CASCADE
 );
 
+-- VIEWS
+DROP VIEW IF EXISTS inclinometry_view;
+CREATE VIEW inclinometry_view as
+SELECT i.id,
+       w.name as well_name,
+       i.md,
+       i.inc,
+       i.azi
+FROM inclinometry i
+         JOIN wells w on w.id = i.well_id;
 

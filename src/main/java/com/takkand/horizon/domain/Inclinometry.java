@@ -11,6 +11,7 @@ import javax.persistence.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class Inclinometry {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

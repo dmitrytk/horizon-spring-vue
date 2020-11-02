@@ -1,29 +1,30 @@
 package com.takkand.horizon.domain.view;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.takkand.horizon.domain.Inclinometry;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
-
-@EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@Data
 @Entity
 @Immutable
 @Table(name = "inclinometry_view")
-public class InclinometryView extends Inclinometry implements View {
+@Data
+public class IncView implements View {
 
-    @JsonSetter("well")
+    @Id
+    Long id;
     @Column(name = "well_name")
+    @JsonSetter("well")
     private String wellName;
+    private Double md;
+    private Double inc;
+    private Double azi;
 
+    @Override
     public boolean isValid() {
         return wellName != null
                 && getMd() != null;
