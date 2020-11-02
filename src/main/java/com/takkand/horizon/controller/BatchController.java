@@ -6,13 +6,13 @@ import com.takkand.horizon.domain.Field;
 import com.takkand.horizon.domain.Well;
 import com.takkand.horizon.domain.view.*;
 import com.takkand.horizon.load.Payload;
-import com.takkand.horizon.load.setter.InclinometryBatchSetter;
 import com.takkand.horizon.load.setter.MerBatchSetter;
 import com.takkand.horizon.load.setter.RateBatchSetter;
 import com.takkand.horizon.load.setter.ZoneBatchSetter;
 import com.takkand.horizon.repository.FieldRepository;
 import com.takkand.horizon.repository.InclinometryRepository;
 import com.takkand.horizon.repository.WellRepository;
+import com.takkand.horizon.service.BatchService;
 import com.takkand.horizon.sql.Queries;
 import com.takkand.horizon.util.Loader;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +39,14 @@ public class BatchController {
     private final FieldRepository fieldRepository;
     private final InclinometryRepository inclinometryRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final BatchService batchService;
 
-    public BatchController(WellRepository wellRepository, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, JdbcTemplate jdbcTemplate) {
+    public BatchController(WellRepository wellRepository, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, JdbcTemplate jdbcTemplate, BatchService batchService) {
         this.wellRepository = wellRepository;
         this.fieldRepository = fieldRepository;
         this.inclinometryRepository = inclinometryRepository;
         this.jdbcTemplate = jdbcTemplate;
+        this.batchService = batchService;
     }
 
 
@@ -79,6 +82,7 @@ public class BatchController {
     }
 
     @PostMapping("/inclinometry")
+    @Transactional
     ResponseEntity<String> loadInclinometry(@RequestBody Payload<InclinometryView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -94,8 +98,13 @@ public class BatchController {
                 .map(View::getWellName).collect(Collectors.toList());
 
         // Delete old inclinometry
-        inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
-        return Loader.load(jdbcTemplate, Queries.INCLINOMETRY_LOAD_QUERY, new InclinometryBatchSetter(fieldId, data));
+        try {
+            inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
+            int[] updateCounts = batchService.inclinometryImport(data, fieldId);
+            return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Database error:\n" + e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/mer")
