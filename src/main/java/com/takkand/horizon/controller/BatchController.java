@@ -81,19 +81,21 @@ public class BatchController {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
 
-        // Get field id
         Long fieldId = payload.getFieldId();
 
         // Filter invalid data
         List<IncView> data = payload.getValidData();
 
-        // Well names to delete old inclinometry
         List<String> wellNames = data.stream()
                 .map(View::getWellName).collect(Collectors.toList());
 
         try {
             // Delete old inclinometry
             inclinometryRepository.deleteInclinometryByWellNames(fieldId, wellNames);
+
+            // Create new wells
+            batchService.createWellsFromWellNames(wellNames, fieldId);
+
             // Load inclinometry
             int[] updateCounts = batchService.inclinometryImport(data, fieldId);
             return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
@@ -103,6 +105,7 @@ public class BatchController {
     }
 
     @PostMapping("/mer")
+    @Transactional
     ResponseEntity<String> loadMer(@RequestBody Payload<MerView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -113,7 +116,13 @@ public class BatchController {
         // Filter invalid data
         List<MerView> data = payload.getValidData();
 
+        List<String> wellNames = data.stream()
+                .map(View::getWellName).collect(Collectors.toList());
+
         try {
+            // Create new wells
+            batchService.createWellsFromWellNames(wellNames, fieldId);
+
             // Load mer
             int[] updateCounts = batchService.merImport(data, fieldId);
             return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
@@ -124,6 +133,7 @@ public class BatchController {
     }
 
     @PostMapping("/rates")
+    @Transactional
     ResponseEntity<String> loadRates(@RequestBody Payload<RateView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -134,8 +144,14 @@ public class BatchController {
         // Filter invalid data
         List<RateView> data = payload.getValidData();
 
+        List<String> wellNames = data.stream()
+                .map(View::getWellName).collect(Collectors.toList());
+
         try {
-            // Load mer
+            // Create new wells
+            batchService.createWellsFromWellNames(wellNames, fieldId);
+
+            // Load rates
             int[] updateCounts = batchService.rateImport(data, fieldId);
             return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
         } catch (Exception e) {
@@ -146,6 +162,7 @@ public class BatchController {
     }
 
     @PostMapping("/zones")
+    @Transactional
     ResponseEntity<String> loadZones(@RequestBody Payload<ZoneView> payload) {
         if (!payload.isValid())
             return new ResponseEntity<>("Invalid data", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -156,8 +173,14 @@ public class BatchController {
         // Filter invalid data
         List<ZoneView> data = payload.getValidData();
 
+        List<String> wellNames = data.stream()
+                .map(View::getWellName).collect(Collectors.toList());
+
         try {
-            // Load mer
+            // Create new wells
+            batchService.createWellsFromWellNames(wellNames, fieldId);
+
+            // Load zones
             int[] updateCounts = batchService.zoneImport(data, fieldId);
             return new ResponseEntity<>(updateCounts.length + " records loaded\n", HttpStatus.OK);
         } catch (Exception e) {

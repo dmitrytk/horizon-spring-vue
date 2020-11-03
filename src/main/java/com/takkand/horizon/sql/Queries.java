@@ -13,7 +13,12 @@ public class Queries {
     public static String FIELD_ZONES_VIEW = "SELECT * FROM zones_view v\n" +
             "where v.well in (select w.name from wells w where w.field_id = :fieldId)";
 
-    public static String MER_LOAD_QUERY = "INSERT INTO mer\n" +
+    public static String CREATE_WELL_FROM_NAME = "INSERT INTO wells (name, field_id)\n" +
+            "VALUES (?, ?)\n" +
+            "ON CONFLICT DO NOTHING;";
+
+
+    public static String MER_LOAD = "INSERT INTO mer\n" +
             "(well_id, date, status, rate, production, work_days) VALUES\n" +
             "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?,?,?)\n" +
             "ON CONFLICT (well_id, date) \n" +
@@ -22,15 +27,15 @@ public class Queries {
             "\tproduction = EXCLUDED.production,\n" +
             "\twork_days = EXCLUDED.work_days;";
 
-    public static String RATE_LOAD_QUERY = "INSERT INTO rates\n" +
+    public static String RATE_LOAD = "INSERT INTO rates\n" +
             "(well_id, date, rate, dynamic, static, pressure) VALUES\n" +
             "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?,?,?);\n";
 
-    public static String INCLINOMETRY_LOAD_QUERY = "INSERT INTO inclinometry\n" +
+    public static String INCLINOMETRY_LOAD = "INSERT INTO inclinometry\n" +
             "(well_id, md, inc, azi) VALUES\n" +
             "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?);\n";
 
-    public static String ZONE_LOAD_QUERY = "INSERT INTO zones\n" +
+    public static String ZONE_LOAD = "INSERT INTO zones\n" +
             "(well_id, name, top_md, bot_md, top_tvd, bot_tvd, h) VALUES\n" +
             "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?,?,?,?)\n" +
             "ON CONFLICT (well_id, name) \n" +

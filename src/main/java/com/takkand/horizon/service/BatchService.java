@@ -21,8 +21,23 @@ public class BatchService {
         this.template = template;
     }
 
+    public int[] createWellsFromWellNames(List<String> wellNames, Long fieldId) {
+        return template.batchUpdate(Queries.CREATE_WELL_FROM_NAME, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, wellNames.get(i));
+                ps.setLong(2, fieldId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return wellNames.size();
+            }
+        });
+    }
+
     public int[] inclinometryImport(List<IncView> data, Long fieldId) {
-        return template.batchUpdate(Queries.INCLINOMETRY_LOAD_QUERY, new BatchPreparedStatementSetter() {
+        return template.batchUpdate(Queries.INCLINOMETRY_LOAD, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, data.get(i).getWellName());
@@ -40,7 +55,7 @@ public class BatchService {
     }
 
     public int[] merImport(List<MerView> data, Long fieldId) {
-        return template.batchUpdate(Queries.MER_LOAD_QUERY, new BatchPreparedStatementSetter() {
+        return template.batchUpdate(Queries.MER_LOAD, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, data.get(i).getWellName());
@@ -60,7 +75,7 @@ public class BatchService {
     }
 
     public int[] rateImport(List<RateView> data, Long fieldId) {
-        return template.batchUpdate(Queries.RATE_LOAD_QUERY, new BatchPreparedStatementSetter() {
+        return template.batchUpdate(Queries.RATE_LOAD, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, data.get(i).getWellName());
@@ -80,7 +95,7 @@ public class BatchService {
     }
 
     public int[] zoneImport(List<ZoneView> data, Long fieldId) {
-        return template.batchUpdate(Queries.ZONE_LOAD_QUERY, new BatchPreparedStatementSetter() {
+        return template.batchUpdate(Queries.ZONE_LOAD, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, data.get(i).getWellName());
