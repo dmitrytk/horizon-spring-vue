@@ -1,12 +1,12 @@
 package com.takkand.horizon.controller;
 
-import com.takkand.horizon.domain.view.IncView;
+import com.takkand.horizon.domain.view.RandomView;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 @RestController
@@ -14,17 +14,16 @@ import java.util.List;
 public class SandboxController {
 
     private final EntityManager manager;
+    private final JdbcTemplate template;
 
-    public SandboxController(EntityManager manager) {
+    public SandboxController(EntityManager manager, JdbcTemplate template) {
         this.manager = manager;
+        this.template = template;
     }
 
     @GetMapping
-    List<IncView> sandbox() {
-        Query q = manager.createNativeQuery("SELECT * FROM inclinometry_view i" +
-                " where i.well in (select w.name from wells w where w.field_id = :id)", IncView.class);
-        q.setParameter("id", 1);
-        return q.getResultList();
+    List<RandomView> sandbox() {
+        return manager.createNativeQuery("select w.id, w.name from wells w", RandomView.class).getResultList();
     }
 
 }

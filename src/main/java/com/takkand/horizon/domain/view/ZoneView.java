@@ -1,7 +1,7 @@
 package com.takkand.horizon.domain.view;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
@@ -20,28 +20,23 @@ public class ZoneView implements View {
     private Long id;
     private String name;
 
-    @Column(name = "top_md")
-    @JsonSetter("top_md")
+    @JsonProperty("top_md")
     private Double topMd;
 
-    @Column(name = "bot_md")
-    @JsonSetter("bot_md")
+    @JsonProperty("bot_md")
     private Double botMd;
 
-    @Column(name = "top_tvd")
-    @JsonSetter("top_tvd")
+    @JsonProperty("top_tvd")
     private Double topTvd;
 
-    @Column(name = "bot_tvd")
-    @JsonSetter("bot_tvd")
+    @JsonProperty("bot_tvd")
     private Double botTvd;
 
-    @Column(name = "h")
-    @JsonSetter("h")
+    @JsonProperty("h")
     private Double h;
 
     @Column(name = "well")
-    @JsonSetter("well")
+    @JsonProperty("well")
     private String wellName;
 
     @Override

@@ -2,7 +2,7 @@ package com.takkand.horizon.domain.view;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
@@ -25,15 +25,15 @@ public class RateView implements View {
     private Date date;
     private Double rate;
     @Column(name = "dynamic")
-    @JsonSetter("dynamic")
+    @JsonProperty("dynamic")
     private Double dynamicLevel;
     @Column(name = "static")
-    @JsonSetter("static")
+    @JsonProperty("static")
     private Double staticLevel;
     private Double pressure;
 
     @Column(name = "well")
-    @JsonSetter("well")
+    @JsonProperty("well")
     private String wellName;
 
     @Override

@@ -130,14 +130,23 @@ FROM rates r
 
 
 DROP VIEW IF EXISTS zones_view;
-CREATE VIEW zones_view as
+CREATE VIEW zones_view AS
 SELECT z.id,
-       w.name as well,
+       w.name AS well,
        z.name,
-       z,top_md,
+       z,
+       top_md,
        z.bot_md,
        z.top_tvd,
        z.bot_tvd,
        z.h
 FROM zones z
-         JOIN wells w on w.id = z.well_id;
+         JOIN wells w ON w.id = z.well_id;
+
+DROP VIEW IF EXISTS field_data;
+CREATE VIEW field_data AS
+SELECT f.id, f.name, count(w.name) as wells_count
+FROM fields f
+         JOIN wells w ON f.id = w.field_id
+GROUP BY 1;
+

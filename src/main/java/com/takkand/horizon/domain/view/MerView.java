@@ -2,7 +2,7 @@ package com.takkand.horizon.domain.view;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
@@ -27,11 +27,11 @@ public class MerView implements View {
     private Double rate;
     private Double production;
     @Column(name = "work_days")
-    @JsonSetter("work_days")
+    @JsonProperty("work_days")
     private Integer workDays;
 
     @Column(name = "well")
-    @JsonSetter("well")
+    @JsonProperty("well")
     private String wellName;
 
     @Override

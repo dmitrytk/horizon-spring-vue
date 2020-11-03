@@ -1,7 +1,7 @@
 package com.takkand.horizon.domain.view;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 
@@ -20,7 +20,7 @@ public class IncView implements View {
     Long id;
 
     @Column(name = "well")
-    @JsonSetter("well")
+    @JsonProperty("well")
     private String wellName;
 
     private Double md;
