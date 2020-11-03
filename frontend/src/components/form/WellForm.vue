@@ -2,7 +2,7 @@
   <b-card-text>
     <!--String-->
     <b-form-group label="Номер" label-cols="4" label-cols-lg="2" label-for="input-default">
-      <b-form-input v-model="well.name"></b-form-input>
+      <b-form-input v-model="well.well"></b-form-input>
     </b-form-group>
     <b-form-group label="Куст" label-cols="4" label-cols-lg="2" label-for="input-default">
       <b-form-input v-model="well.pad"></b-form-input>

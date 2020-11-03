@@ -51,7 +51,7 @@ public class BatchController {
                 .collect(Collectors.toMap(Well::getName, Function.identity()));
         List<Well> newWells = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        payload.get("wells").forEach(node -> {
+        payload.get("data").forEach(node -> {
             try {
                 Well well = objectMapper.treeToValue(node, Well.class);
                 System.out.println(well);

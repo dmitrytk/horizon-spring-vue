@@ -24,7 +24,7 @@ public class Mer {
     private Double rate;
     private Double production;
     @Column(name = "work_days")
-    @JsonSetter("bot_tvd")
+    @JsonSetter("work_days")
     private Integer workDays;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "well_id")

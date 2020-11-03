@@ -83,6 +83,7 @@ export default {
         type: this.selectedDataType,
         data: this.data,
       };
+      console.log(data);
       BatchService.import(data)
         .then(() => {
           this.$toasted.show('Данные сохранены');

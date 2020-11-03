@@ -1,6 +1,18 @@
 package com.takkand.horizon.sql;
 
 public class Queries {
+    public static String FIELD_INCLINOMETRY_VIEW = "SELECT * FROM inclinometry_view v\n" +
+            "where v.well in (select w.name from wells w where w.field_id = :fieldId)";
+
+    public static String FIELD_MER_VIEW = "SELECT * FROM mer_view v\n" +
+            "where v.well in (select w.name from wells w where w.field_id = :fieldId)";
+
+    public static String FIELD_RATES_VIEW = "SELECT * FROM rates_view v\n" +
+            "where v.well in (select w.name from wells w where w.field_id = :fieldId)";
+
+    public static String FIELD_ZONES_VIEW = "SELECT * FROM zones_view v\n" +
+            "where v.well in (select w.name from wells w where w.field_id = :fieldId)";
+
     public static String MER_LOAD_QUERY = "INSERT INTO mer\n" +
             "(well_id, date, status, rate, production, work_days) VALUES\n" +
             "((SELECT id FROM wells w WHERE w.name=? and w.field_id=?),?,?,?,?,?)\n" +

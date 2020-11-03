@@ -22,7 +22,8 @@ public class SandboxController {
     @GetMapping
     List<IncView> sandbox() {
         Query q = manager.createNativeQuery("SELECT * FROM inclinometry_view i" +
-                " where i.well_name in (select w.name from wells w where w.field_id = 1)", IncView.class);
+                " where i.well in (select w.name from wells w where w.field_id = :id)", IncView.class);
+        q.setParameter("id", 1);
         return q.getResultList();
     }
 

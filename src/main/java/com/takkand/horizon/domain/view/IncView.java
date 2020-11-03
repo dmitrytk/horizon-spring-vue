@@ -1,5 +1,6 @@
 package com.takkand.horizon.domain.view;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
@@ -17,14 +18,17 @@ public class IncView implements View {
 
     @Id
     Long id;
-    @Column(name = "well_name")
+
+    @Column(name = "well")
     @JsonSetter("well")
     private String wellName;
+
     private Double md;
     private Double inc;
     private Double azi;
 
     @Override
+    @JsonIgnore
     public boolean isValid() {
         return wellName != null
                 && getMd() != null;

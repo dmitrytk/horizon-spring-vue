@@ -18,7 +18,7 @@
                        head-variant="dark"
                        responsive
                        @click="getWells">
-                <template #cell(name)="data">
+                <template #cell(well)="data">
                   <!-- `data.value` is the value after formatted by the Formatter -->
                   <a :href="link(data.value)" class="font-weight-bold text-dark">{{
                       data.value
@@ -30,7 +30,7 @@
             <b-button v-if="wells.length>0" variant="danger" @click="deleteWells">Удалить</b-button>
           </b-tab>
 
-          <InclinometryTab v-bind:id="this.$route.params.id" inc-type="fields"/>
+          <InclinometryTab v-bind:id="String(this.$route.params.id)" inc-type="fields"/>
 
           <!--Map-->
           <MapTab/>
@@ -127,7 +127,7 @@ export default {
       this.wellsLoaded = true;
     },
     link(data) {
-      const wellId = this.wells.find((el) => el.name === data).id;
+      const wellId = this.wells.find((el) => el.well === data).id;
       return `/fields/${this.$route.params.id}/wells/${wellId}`;
     },
   },

@@ -97,10 +97,47 @@ CREATE TABLE mer
 DROP VIEW IF EXISTS inclinometry_view;
 CREATE VIEW inclinometry_view as
 SELECT i.id,
-       w.name as well_name,
+       w.name as well,
        i.md,
        i.inc,
        i.azi
 FROM inclinometry i
          JOIN wells w on w.id = i.well_id;
 
+DROP VIEW IF EXISTS mer_view;
+CREATE VIEW mer_view as
+SELECT m.id,
+       w.name as well,
+       m.date,
+       m.rate,
+       m.status,
+       m.production,
+       m.work_days
+FROM mer m
+         JOIN wells w on w.id = m.well_id;
+
+DROP VIEW IF EXISTS rates_view;
+CREATE VIEW rates_view as
+SELECT r.id,
+       w.name as well,
+       r.date,
+       r.rate,
+       r.dynamic,
+       r.static,
+       r.pressure
+FROM rates r
+         JOIN wells w on w.id = r.well_id;
+
+
+DROP VIEW IF EXISTS zones_view;
+CREATE VIEW zones_view as
+SELECT z.id,
+       w.name as well,
+       z.name,
+       z,top_md,
+       z.bot_md,
+       z.top_tvd,
+       z.bot_tvd,
+       z.h
+FROM zones z
+         JOIN wells w on w.id = z.well_id;

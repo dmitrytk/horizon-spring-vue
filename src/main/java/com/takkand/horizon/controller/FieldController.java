@@ -3,26 +3,33 @@ package com.takkand.horizon.controller;
 import com.takkand.horizon.domain.Field;
 import com.takkand.horizon.domain.FieldCoordinates;
 import com.takkand.horizon.domain.Well;
+import com.takkand.horizon.domain.view.IncView;
+import com.takkand.horizon.domain.view.MerView;
+import com.takkand.horizon.domain.view.RateView;
+import com.takkand.horizon.domain.view.ZoneView;
 import com.takkand.horizon.exception.ResourceNotFoundException;
 import com.takkand.horizon.repository.*;
-import com.takkand.horizon.util.QueryMatcher;
+import com.takkand.horizon.sql.Queries;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/fields")
 public class FieldController {
 
+    private final EntityManager manager;
     private final FieldRepository fieldRepository;
     private final InclinometryRepository inclinometryRepository;
     private final MerRepository merRepository;
     private final RateRepository rateRepository;
     private final FieldCoordinatesRepository fieldCoordinatesRepository;
 
-    public FieldController(FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, MerRepository merRepository, RateRepository rateRepository, FieldCoordinatesRepository fieldCoordinatesRepository) {
+    public FieldController(EntityManager manager, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, MerRepository merRepository, RateRepository rateRepository, FieldCoordinatesRepository fieldCoordinatesRepository) {
+        this.manager = manager;
         this.fieldRepository = fieldRepository;
         this.inclinometryRepository = inclinometryRepository;
         this.merRepository = merRepository;
@@ -83,27 +90,37 @@ public class FieldController {
     }
 
     @GetMapping("/{id}/inclinometry")
-    List<Map<String, Object>> getInclinometryView(@PathVariable Long id) {
-        List<Object[]> set = inclinometryRepository.findFieldInclinometryWithWellNames(id);
-        return QueryMatcher.inclinometryMatcher(set);
+    List<IncView> getInclinometryView(@PathVariable Long id) {
+        Query query = manager.createNativeQuery(Queries.FIELD_INCLINOMETRY_VIEW, IncView.class);
+        query.setParameter("fieldId", id);
+        return query.getResultList();
     }
 
     @GetMapping("/{id}/mer")
-    List<Map<String, Object>> getMerView(@PathVariable Long id) {
-        List<Object[]> resultSet = merRepository.findFieldMerWithWellNames(id);
-        return QueryMatcher.merMatcher(resultSet);
+    List<MerView> getMerView(@PathVariable Long id) {
+        Query query = manager.createNativeQuery(Queries.FIELD_MER_VIEW, MerView.class);
+        query.setParameter("fieldId", id);
+        return query.getResultList();
     }
 
     @GetMapping("/{id}/rates")
-    List<Map<String, Object>> getRatesView(@PathVariable Long id) {
-        List<Object[]> resultSet = rateRepository.findFieldRatesWithWellNames(id);
-        return QueryMatcher.ratesMatcher(resultSet);
+    List<RateView> getRatesView(@PathVariable Long id) {
+        Query query = manager.createNativeQuery(Queries.FIELD_RATES_VIEW, RateView.class);
+        query.setParameter("fieldId", id);
+        return query.getResultList();
+    }
+
+    @GetMapping("/{id}/zones")
+    List<ZoneView> getZonesView(@PathVariable Long id) {
+        Query query = manager.createNativeQuery(Queries.FIELD_ZONES_VIEW, ZoneView.class);
+        query.setParameter("fieldId", id);
+        return query.getResultList();
     }
 
 
     // DELETE CHILD OBJECTS
     @DeleteMapping("/{id}/coordinates")
-    void deleteCoordinatess(@PathVariable Long id) {
+    void deleteCoordinates(@PathVariable Long id) {
         fieldCoordinatesRepository.deleteFieldCoordinates(id);
     }
 
