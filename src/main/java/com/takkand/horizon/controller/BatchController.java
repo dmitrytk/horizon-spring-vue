@@ -11,7 +11,6 @@ import com.takkand.horizon.repository.WellRepository;
 import com.takkand.horizon.service.BatchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +31,16 @@ public class BatchController {
     private final WellRepository wellRepository;
     private final FieldRepository fieldRepository;
     private final InclinometryRepository inclinometryRepository;
-    private final JdbcTemplate jdbcTemplate;
     private final BatchService batchService;
 
-    public BatchController(WellRepository wellRepository, FieldRepository fieldRepository, InclinometryRepository inclinometryRepository, JdbcTemplate jdbcTemplate, BatchService batchService) {
+
+    public BatchController(WellRepository wellRepository,
+                           FieldRepository fieldRepository,
+                           InclinometryRepository inclinometryRepository,
+                           BatchService batchService) {
         this.wellRepository = wellRepository;
         this.fieldRepository = fieldRepository;
         this.inclinometryRepository = inclinometryRepository;
-        this.jdbcTemplate = jdbcTemplate;
         this.batchService = batchService;
     }
 
@@ -87,7 +88,9 @@ public class BatchController {
         List<IncView> data = payload.getValidData();
 
         List<String> wellNames = data.stream()
-                .map(View::getWellName).collect(Collectors.toList());
+                .map(View::getWellName)
+                .distinct()
+                .collect(Collectors.toList());
 
         try {
             // Delete old inclinometry
@@ -117,7 +120,9 @@ public class BatchController {
         List<MerView> data = payload.getValidData();
 
         List<String> wellNames = data.stream()
-                .map(View::getWellName).collect(Collectors.toList());
+                .map(View::getWellName)
+                .distinct()
+                .collect(Collectors.toList());
 
         try {
             // Create new wells
@@ -145,7 +150,9 @@ public class BatchController {
         List<RateView> data = payload.getValidData();
 
         List<String> wellNames = data.stream()
-                .map(View::getWellName).collect(Collectors.toList());
+                .map(View::getWellName)
+                .distinct()
+                .collect(Collectors.toList());
 
         try {
             // Create new wells
@@ -174,7 +181,9 @@ public class BatchController {
         List<ZoneView> data = payload.getValidData();
 
         List<String> wellNames = data.stream()
-                .map(View::getWellName).collect(Collectors.toList());
+                .map(View::getWellName)
+                .distinct()
+                .collect(Collectors.toList());
 
         try {
             // Create new wells

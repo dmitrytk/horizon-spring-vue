@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class BatchService {
@@ -24,11 +22,10 @@ public class BatchService {
     }
 
     public int[] createWellsFromWellNames(List<String> wellNames, Long fieldId) {
-        List<String> names = new ArrayList<>(Set.copyOf(wellNames));
         return template.batchUpdate(Queries.CREATE_WELL_FROM_NAME, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setString(1, names.get(i));
+                ps.setString(1, wellNames.get(i));
                 ps.setLong(2, fieldId);
             }
 
