@@ -115,7 +115,6 @@
       <div class="text-left">
         <button class="btn btn-primary" @click="convert">
           Ковертировать
-          <v-icon name="angle-double-right"/>
         </button>
         <button
           v-clipboard:copy="outData"
@@ -123,11 +122,9 @@
           class="btn btn-info ml-2"
         >
           Копировать
-          <v-icon name="copy"/>
         </button>
         <button class="btn btn-danger ml-2" @click="clear">
           Очистить
-          <v-icon name="trash"/>
         </button>
       </div>
     </b-card>

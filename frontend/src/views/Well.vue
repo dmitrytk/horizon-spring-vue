@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loaded" class="container">
-    <h2 v-once class="text-center my-3">Скважина {{ well.name }},
+  <div :v-if="loaded" class="container">
+    <h2 class="text-center my-3">Скважина {{ well.name }},
       {{ field.name }} месторождение </h2>
     <b-breadcrumb>
       <b-breadcrumb-item to="/fields">Месторождение</b-breadcrumb-item>
@@ -15,7 +15,25 @@
               <WellForm v-bind:well="well" @sendWell="update"/>
             </b-card-text>
           </b-tab>
-          <InclinometryTab v-bind:id="this.$route.params.wellId" inc-type="wells"/>
+
+          <InclinometryTab :data="inclinometry" inc-type="wells"/>
+
+          <!--          <b-tab title="Инклинометрия">-->
+          <!--            <b-card-text>-->
+          <!--              <b-table v-if="inclinometry.length>0" ref="table"-->
+          <!--                       :fields="tables.inclinometry" :items="inclinometry"-->
+          <!--                       head-variant="dark"-->
+          <!--                       responsive-->
+          <!--                       sticky-header>-->
+          <!--              </b-table>-->
+          <!--            </b-card-text>-->
+          <!--          </b-tab>-->
+
+          <b-tab title="Диаграмы">
+            <b-card-text>
+              <test-chart v-if="rateLoaded" :data="rates"/>
+            </b-card-text>
+          </b-tab>
         </b-tabs>
       </b-card>
     </div>
@@ -26,21 +44,24 @@
 import WellForm from '@/components/form/WellForm.vue';
 import WellService from '@/services/WellService';
 import FieldService from '@/services/FieldService';
-import IncService from '@/services/IncService';
 import tables from '@/data/databaseTables';
+import TestChart from '@/components/chart/TestChart';
 import InclinometryTab from '@/components/InclinometryTab.vue';
 
 export default {
   name: 'Well',
-  components: { InclinometryTab, WellForm },
+  components: { TestChart, InclinometryTab, WellForm },
   data() {
     return {
       tables,
       loaded: false,
       incLoaded: false,
+      rateLoaded: false,
       well: {},
       field: {},
       inclinometry: [],
+      mer: [],
+      rates: {},
       bread: [
         { text: 'Месторождения', to: '/fields' },
         { text: 'Месторождение', to: '/fields/1' },
@@ -48,14 +69,21 @@ export default {
       ],
     };
   },
-  created() {
+  mounted() {
+    this.loaded = false;
+    this.incLoaded = false;
+    this.rateLoaded = false;
     this.fetchWell();
     this.fetchField();
+    this.fetchInclinometry();
+    this.fetchMer();
+    this.fetchRates();
   },
   computed: {
     wellName() {
       return this.well.name;
     },
+
   },
   methods: {
     fetchWell() {
@@ -72,13 +100,28 @@ export default {
         });
     },
     fetchInclinometry() {
-      if (!this.incLoaded) {
-        IncService.getWellInclinometry(this.$route.params.wellId)
-          .then((res) => {
-            this.inclinometry = res.data;
-            this.incLoaded = true;
-          });
-      }
+      WellService.getInclinometry(this.$route.params.wellId)
+        .then((res) => {
+          this.inclinometry = res.data;
+          console.log(res.data);
+          this.incLoaded = true;
+        });
+    },
+    fetchMer() {
+      WellService.getMer(this.$route.params.wellId)
+        .then((res) => {
+          this.mer = res.data;
+        });
+    },
+    fetchRates() {
+      WellService.getRates(this.$route.params.wellId)
+        .then((res) => {
+          this.rates.dates = res.data.map((el) => el.date);
+          this.rates.rates = res.data.map((el) => el.rate);
+          this.rates.dynamic = res.data.map((el) => el.dynamic);
+          this.rates.static = res.data.map((el) => el.static);
+          this.rateLoaded = true;
+        });
     },
 
     update(data) {
@@ -92,6 +135,7 @@ export default {
     },
 
   },
+
 };
 </script>
 

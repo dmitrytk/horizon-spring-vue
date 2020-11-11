@@ -12,12 +12,12 @@
           </b-tab>
 
           <!--Wells-->
-          <b-tab title="Скважины" @click="getWells">
+          <b-tab title="Скважины">
             <div>
               <b-table v-if="wells.length>0" ref="table" :fields="fields" :items="wells"
                        head-variant="dark"
                        responsive
-                       @click="getWells">
+              >
                 <template #cell(well)="data">
                   <!-- `data.value` is the value after formatted by the Formatter -->
                   <a :href="link(data.value)" class="font-weight-bold text-dark">{{
@@ -30,7 +30,7 @@
             <b-button v-if="wells.length>0" variant="danger" @click="deleteWells">Удалить</b-button>
           </b-tab>
 
-          <InclinometryTab v-bind:id="String(this.$route.params.id)" inc-type="fields"/>
+          <InclinometryTab v-if="inclinometry.length>0" :data="inclinometry" inc-type="fields"/>
 
           <!--Map-->
           <MapTab/>
@@ -56,9 +56,11 @@ export default {
       fields: tables.wells,
       fieldLoaded: false,
       wellsLoaded: false,
+      incLoaded: false,
       mapLoaded: false,
       field: {},
       wells: [],
+      inclinometry: [],
       items: [
         { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
         { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
@@ -71,8 +73,10 @@ export default {
       ],
     };
   },
-  created() {
+
+  mounted() {
     this.getField();
+    this.getWells();
   },
 
   methods: {
@@ -86,13 +90,18 @@ export default {
         });
     },
     getWells() {
-      if (!this.wellsLoaded) {
-        FieldService.getWells(this.$route.params.id)
-          .then((res) => {
-            this.wells = res.data;
-            this.wellsLoaded = true;
-          });
-      }
+      FieldService.getWells(this.$route.params.id)
+        .then((res) => {
+          this.wells = res.data;
+          this.wellsLoaded = true;
+        });
+    },
+    getInclinometry() {
+      FieldService.getInclinometry(this.$route.params.id)
+        .then((res) => {
+          this.inclinometry = res.data;
+          this.incLoaded = true;
+        });
     },
     update(data) {
       FieldService.update(this.$route.params.id, data)

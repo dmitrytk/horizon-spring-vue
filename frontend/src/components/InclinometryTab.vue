@@ -1,8 +1,8 @@
 <template>
-  <b-tab title="Инклинометрия" @click="getInclinometry">
+  <b-tab title="Инклинометрия">
     <div>
-      <b-table v-if="inc.length>0" ref="table"
-               :fields="fields" :items="inc"
+      <b-table ref="table"
+               :fields="fields" :items="data"
                head-variant="dark"
                responsive
                sticky-header>
@@ -13,49 +13,19 @@
 
 <script>
 import tables from '@/data/databaseTables';
-import FieldService from '@/services/FieldService';
-import WellService from '@/services/WellService';
 
 export default {
   name: 'InclinometryTab',
   props: {
     incType: String,
-    id: String,
+    data: Array,
   },
   data() {
     return {
       fields: this.incType === 'fields'
         ? tables.inclinometry
         : tables.inclinometry.filter((el) => el.key !== 'well'),
-      inc: [],
-      loaded: false,
     };
-  },
-  methods: {
-    getInclinometry() {
-      if (!this.loaded) {
-        if (this.incType === 'fields') {
-          FieldService.getInclinometry(this.id)
-            .then((res) => {
-              this.inc = res.data;
-              this.loaded = true;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else if (this.incType === 'wells') {
-          WellService.getInclinometry(this.id)
-            .then((res) => {
-              this.inc = res.data;
-              this.loaded = true;
-            });
-        }
-      }
-    },
   },
 };
 </script>
-
-<style scoped>
-
-</style>
