@@ -1,13 +1,12 @@
 <template>
   <b-tab title="Инклинометрия">
-    <div>
-      <b-table ref="table"
-               :fields="fields" :items="data"
-               head-variant="dark"
-               responsive
-               sticky-header>
-      </b-table>
-    </div>
+    <b-table v-if="data.length>0" ref="table"
+             :fields="fields" :items="data"
+             head-variant="dark"
+             responsive
+             sticky-header>
+    </b-table>
+    <h3 v-else>Нет данных</h3>
   </b-tab>
 </template>
 

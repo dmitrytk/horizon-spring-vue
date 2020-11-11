@@ -1,29 +1,20 @@
-<template>
-  <BarPointChart :chartdata="chartdata" :options="options"/>
-</template>
-
-<script>
-import BarPointChart from './BarPointChart';
+import { Bar, Line } from 'vue-chartjs';
 
 export default {
-  name: 'WellRateChart',
+  mixins: [Bar, Line],
   props: {
-    data: Object,
-  },
-  components: { BarPointChart },
-  created() {
-    console.log(this.data);
+    data: Array,
   },
   data() {
     return {
       chartdata: {
-        labels: this.data.dates,
+        labels: this.data.map((el) => el.date),
         datasets: [
           {
             type: 'bar',
             label: 'Дебит, м3/сут',
             backgroundColor: '#7bbbe7',
-            data: this.data.rates,
+            data: this.data.map((el) => el.rate),
             yAxisID: 'left-axis',
             order: 2,
           },
@@ -31,7 +22,7 @@ export default {
             type: 'line',
             label: 'Динамика, м',
             backgroundColor: '#ff2222',
-            data: this.data.dynamic,
+            data: this.data.map((el) => el.dynamic),
             yAxisID: 'right-axis',
             order: 1,
           },
@@ -39,14 +30,18 @@ export default {
             type: 'line',
             label: 'Статика, м',
             backgroundColor: '#52ff00',
-            data: this.data.static,
+            data: this.data.map((el) => el.static),
             yAxisID: 'right-axis',
             order: 1,
-
           },
         ],
       },
       options: {
+        title: {
+          text: 'Режимные наблюдения',
+          display: true,
+          fontSize: 14,
+        },
         maxTicksLimit: 15,
         // Basic options
         responsive: true,
@@ -85,9 +80,9 @@ export default {
       },
     };
   },
+
+  mounted() {
+    this.renderChart(this.chartdata, this.options);
+  }
+  ,
 };
-</script>
-
-<style scoped>
-
-</style>

@@ -1,7 +1,7 @@
 <template>
   <b-tab title="Карта">
     <b-card-text>
-      <h1>Some text</h1>
+      <h1>Здесь будет карта</h1>
       <yandex-map :coords="coords" :settings="settings">
         <ymap-marker
           :coords="coords"
