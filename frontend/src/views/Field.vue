@@ -20,9 +20,10 @@
               >
                 <template #cell(well)="data">
                   <!-- `data.value` is the value after formatted by the Formatter -->
-                  <a :href="link(data.value)" class="font-weight-bold text-dark">{{
+                  <router-link :to="link(data.value)" class="font-weight-bold text-dark">{{
                       data.value
-                    }}</a>
+                    }}
+                  </router-link>
                 </template>
               </b-table>
             </div>
